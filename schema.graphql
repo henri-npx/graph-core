@@ -1,0 +1,32 @@
+type CreateVault @entity {
+  id: ID!
+  vault: Bytes! # address
+  creator: Bytes! # address
+}
+
+type OwnershipTransferred @entity {
+  id: ID!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+}
+
+type SetAccessManager @entity {
+  id: ID!
+  newAccessManager: Bytes! # address
+}
+
+type SetFeesManager @entity {
+  id: ID!
+  newFeesManager: Bytes! # address
+}
+
+type SetHarvester @entity {
+  id: ID!
+  newHarvester: Bytes! # address
+}
+
+type SetSwapContracts @entity {
+  id: ID!
+  newSwapRouter: Bytes! # address
+  newSwapProxy: Bytes! # address
+}
