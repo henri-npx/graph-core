@@ -50,6 +50,15 @@ export class Factory extends Entity {
   set vaultCount(value: i32) {
     this.set("vaultCount", Value.fromI32(value));
   }
+
+  get vaults(): Array<string> {
+    let value = this.get("vaults");
+    return value!.toStringArray();
+  }
+
+  set vaults(value: Array<string>) {
+    this.set("vaults", Value.fromStringArray(value));
+  }
 }
 
 export class Vault extends Entity {
@@ -135,6 +144,24 @@ export class Vault extends Entity {
 
   set redemptions(value: Array<string>) {
     this.set("redemptions", Value.fromStringArray(value));
+  }
+
+  get managementFeesHarvests(): Array<string> {
+    let value = this.get("managementFeesHarvests");
+    return value!.toStringArray();
+  }
+
+  set managementFeesHarvests(value: Array<string>) {
+    this.set("managementFeesHarvests", Value.fromStringArray(value));
+  }
+
+  get performanceFeesHarvests(): Array<string> {
+    let value = this.get("performanceFeesHarvests");
+    return value!.toStringArray();
+  }
+
+  set performanceFeesHarvests(value: Array<string>) {
+    this.set("performanceFeesHarvests", Value.fromStringArray(value));
   }
 }
 
@@ -440,5 +467,167 @@ export class Rebalance extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class HarvestManagementFees extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save HarvestManagementFees entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type HarvestManagementFees must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("HarvestManagementFees", id.toString(), this);
+    }
+  }
+
+  static load(id: string): HarvestManagementFees | null {
+    return changetype<HarvestManagementFees | null>(
+      store.get("HarvestManagementFees", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get vault(): string {
+    let value = this.get("vault");
+    return value!.toString();
+  }
+
+  set vault(value: string) {
+    this.set("vault", Value.fromString(value));
+  }
+
+  get fromHarvester(): Bytes | null {
+    let value = this.get("fromHarvester");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fromHarvester(value: Bytes | null) {
+    if (!value) {
+      this.unset("fromHarvester");
+    } else {
+      this.set("fromHarvester", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get feesToDAO(): BigInt {
+    let value = this.get("feesToDAO");
+    return value!.toBigInt();
+  }
+
+  set feesToDAO(value: BigInt) {
+    this.set("feesToDAO", Value.fromBigInt(value));
+  }
+
+  get feesToStrategist(): BigInt {
+    let value = this.get("feesToStrategist");
+    return value!.toBigInt();
+  }
+
+  set feesToStrategist(value: BigInt) {
+    this.set("feesToStrategist", Value.fromBigInt(value));
+  }
+}
+
+export class HarvestPerformanceFees extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save HarvestPerformanceFees entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type HarvestPerformanceFees must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("HarvestPerformanceFees", id.toString(), this);
+    }
+  }
+
+  static load(id: string): HarvestPerformanceFees | null {
+    return changetype<HarvestPerformanceFees | null>(
+      store.get("HarvestPerformanceFees", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get vault(): string {
+    let value = this.get("vault");
+    return value!.toString();
+  }
+
+  set vault(value: string) {
+    this.set("vault", Value.fromString(value));
+  }
+
+  get fromHarvester(): Bytes | null {
+    let value = this.get("fromHarvester");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fromHarvester(value: Bytes | null) {
+    if (!value) {
+      this.unset("fromHarvester");
+    } else {
+      this.set("fromHarvester", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get feesToDAO(): BigInt {
+    let value = this.get("feesToDAO");
+    return value!.toBigInt();
+  }
+
+  set feesToDAO(value: BigInt) {
+    this.set("feesToDAO", Value.fromBigInt(value));
+  }
+
+  get feesToStrategist(): BigInt {
+    let value = this.get("feesToStrategist");
+    return value!.toBigInt();
+  }
+
+  set feesToStrategist(value: BigInt) {
+    this.set("feesToStrategist", Value.fromBigInt(value));
   }
 }
