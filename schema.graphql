@@ -1,32 +1,78 @@
-type CreateVault @entity {
+type Factory @entity {
   id: ID!
+  vaultCount: Int!
+  vaults: [Vault!]! @derivedFrom(field: "factory")
+}
+
+type Vault @entity {
+  id: ID!
+  factory: Factory!
   vault: Bytes! # address
   creator: Bytes! # address
+  deposits: [Deposit!]! @derivedFrom(field: "vault")
+  rebalances: [Rebalance!]! @derivedFrom(field: "vault")
+  redemptions: [Redeem!]! @derivedFrom(field: "vault")
+  managementFeesHarvests: [HarvestManagementFees!]! @derivedFrom(field: "vault")
+  performanceFeesHarvests: [HarvestPerformanceFees!]! @derivedFrom(field: "vault")
+  # assetsHourData: [AssetHourData!]! @derivedFrom(field: "pool")
 }
 
-type OwnershipTransferred @entity {
+# type AssetData @entity {
+#   # Format: <vault address>-<timestamp>
+#   id: ID!
+#   address: Bytes!
+#   priceUSD: BigInt!
+#   timestamp: BigInt!
+# }
+
+# v2: Sum amountIn deposit 
+# v2: Sum exit Fees generated per vault
+
+type Share @entity {
   id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
+  totalSupply: BigInt!
+  symbol: String!
+  name: String!
+  decimals: BigInt!
 }
 
-type SetAccessManager @entity {
+type Deposit @entity {
   id: ID!
-  newAccessManager: Bytes! # address
+  vault: Vault!
+  from: Bytes,
+  netAmountOut: BigInt!
+  toMint:BigInt!
+  timestamp: BigInt!
 }
 
-type SetFeesManager @entity {
+type Redeem @entity {
   id: ID!
-  newFeesManager: Bytes! # address
+  vault: Vault!
+  from: Bytes,
+  amountIn: BigInt!
+  timestamp: BigInt!
 }
 
-type SetHarvester @entity {
+type Rebalance @entity {
   id: ID!
-  newHarvester: Bytes! # address
+  vault: Vault!
+  from: Bytes,
+  signals: [BigInt!]!
+  timestamp: BigInt!
 }
 
-type SetSwapContracts @entity {
+type HarvestManagementFees @entity {
   id: ID!
-  newSwapRouter: Bytes! # address
-  newSwapProxy: Bytes! # address
+  vault: Vault!
+  fromHarvester: Bytes,
+  feesToDAO: BigInt!
+  feesToStrategist: BigInt!
+}
+
+type HarvestPerformanceFees @entity {
+  id: ID!
+  vault: Vault!
+  fromHarvester: Bytes,
+  feesToDAO: BigInt!
+  feesToStrategist: BigInt!
 }

@@ -1,38 +1,64 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
+description: Shepherd is a decentralised, community-owned asset management platform
+repository: https://github.com/Uniswap/uniswap-v3-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Factory
     network: bsc
     source:
       address: "0x52483Cb6B95bb58E5667dDfc8C2Ae8189fdB6a50"
       abi: Factory
+      startBlock: 17229600 # To update for new Graphs
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
+      file: ./src/mappings/factory.ts
       entities:
-        - CreateVault
-        - OwnershipTransferred
-        - SetAccessManager
-        - SetFeesManager
-        - SetHarvester
-        - SetSwapContracts
+        - Vault
       abis:
         - name: Factory
           file: ./abis/Factory.json
+        - name: Vault
+          file: ./abis/Vault.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: CreateVault(address,address)
           handler: handleCreateVault
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: SetAccessManager(address)
-          handler: handleSetAccessManager
-        - event: SetFeesManager(address)
-          handler: handleSetFeesManager
-        - event: SetHarvester(address)
-          handler: handleSetHarvester
-        - event: SetSwapContracts(address,address)
-          handler: handleSetSwapContracts
-      file: ./src/mapping.ts
+templates:
+    - kind: ethereum/contract
+      name: Vault
+      network: bsc
+      source:
+          abi: Vault
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.5
+          language: wasm/assemblyscript
+          file: ./src/mappings/vault.ts
+          entities:
+              - Vault
+          abis:
+              - name: Vault
+                file: ./abis/Vault.json
+              - name: Factory
+                file: ./abis/Factory.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+          eventHandlers:
+              - event: Deposit(indexed address,uint256,uint256,uint256)
+                handler: handleDeposit
+              - event: Rebalance(address,uint256[],uint256)
+                handler: handleRebalance
+              - event: Redeem(indexed address,uint256,uint256)
+                handler: handleRedeem
+              - event: HarvestManagementFees(address,uint256,uint256)
+                handler: handleHarvestManagementFees
+              - event: HarvestPerformanceFees(address,uint256,uint256)
+                handler: handleHarvestPerformanceFees
+              # Add Asset ToDo 
+              # - event: HarvestPerformanceFees(address,uint256,uint256)
+              #   handler: handleHarvestPerformanceFees
