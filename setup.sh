@@ -10,3 +10,7 @@ graph build
 
 yarn deploy
 # Deploy
+
+
+# Is there a way to query the subgraph directly to determine the latest block number it has indexed ?
+curl -X POST -d '{ "query": "{indexingStatusForCurrentVersion(subgraphName: \"organization/subgraphName\") { chains { latestBlock { hash number }}}}"}' https://api.thegraph.com/index-node/graphql

@@ -25,7 +25,7 @@ import {
 import { Vault as VaultTemplate } from '../types/templates'
 
 import {
-  FACTORY_ADDRESS,
+  FACTORY_ADDRESS, ZERO_BI,
 } from './helpers'
 
 export function handleCreateVault(event: VaultCreated): void {
@@ -33,7 +33,6 @@ export function handleCreateVault(event: VaultCreated): void {
   if (factory === null) {
     factory = new Factory(FACTORY_ADDRESS)
     factory.vaultCount = 0
-    // factory.vaults = []
   }
   factory.vaultCount = factory.vaultCount + 1
   factory.save()
@@ -42,6 +41,18 @@ export function handleCreateVault(event: VaultCreated): void {
   vault.creator = event.params.creator;
   vault.vault = event.params.vault;
   vault.factory = factory.id
+
+  vault.accManagementFeesToDAO = ZERO_BI
+  vault.accPerformanceFeesToDAO = ZERO_BI
+  
+  vault.accManagementFeesToStrategists = ZERO_BI
+  vault.accPerformanceFeesToStrategists = ZERO_BI
+  vault.accManagementFees = ZERO_BI
+  vault.accPerformanceFees = ZERO_BI
+
+  vault.depositsCount = ZERO_BI
+  vault.rebalancesCount = ZERO_BI
+  vault.redemptionsCount = ZERO_BI
 
   // let context = new DataSourceTemplate();
   // let context2 = new DataSourceContext();

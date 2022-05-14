@@ -119,6 +119,60 @@ export class Vault extends Entity {
     this.set("creator", Value.fromBytes(value));
   }
 
+  get accManagementFeesToDAO(): BigInt {
+    let value = this.get("accManagementFeesToDAO");
+    return value!.toBigInt();
+  }
+
+  set accManagementFeesToDAO(value: BigInt) {
+    this.set("accManagementFeesToDAO", Value.fromBigInt(value));
+  }
+
+  get accPerformanceFeesToDAO(): BigInt {
+    let value = this.get("accPerformanceFeesToDAO");
+    return value!.toBigInt();
+  }
+
+  set accPerformanceFeesToDAO(value: BigInt) {
+    this.set("accPerformanceFeesToDAO", Value.fromBigInt(value));
+  }
+
+  get accManagementFeesToStrategists(): BigInt {
+    let value = this.get("accManagementFeesToStrategists");
+    return value!.toBigInt();
+  }
+
+  set accManagementFeesToStrategists(value: BigInt) {
+    this.set("accManagementFeesToStrategists", Value.fromBigInt(value));
+  }
+
+  get accPerformanceFeesToStrategists(): BigInt {
+    let value = this.get("accPerformanceFeesToStrategists");
+    return value!.toBigInt();
+  }
+
+  set accPerformanceFeesToStrategists(value: BigInt) {
+    this.set("accPerformanceFeesToStrategists", Value.fromBigInt(value));
+  }
+
+  get accManagementFees(): BigInt {
+    let value = this.get("accManagementFees");
+    return value!.toBigInt();
+  }
+
+  set accManagementFees(value: BigInt) {
+    this.set("accManagementFees", Value.fromBigInt(value));
+  }
+
+  get accPerformanceFees(): BigInt {
+    let value = this.get("accPerformanceFees");
+    return value!.toBigInt();
+  }
+
+  set accPerformanceFees(value: BigInt) {
+    this.set("accPerformanceFees", Value.fromBigInt(value));
+  }
+
   get deposits(): Array<string> {
     let value = this.get("deposits");
     return value!.toStringArray();
@@ -144,6 +198,33 @@ export class Vault extends Entity {
 
   set redemptions(value: Array<string>) {
     this.set("redemptions", Value.fromStringArray(value));
+  }
+
+  get depositsCount(): BigInt {
+    let value = this.get("depositsCount");
+    return value!.toBigInt();
+  }
+
+  set depositsCount(value: BigInt) {
+    this.set("depositsCount", Value.fromBigInt(value));
+  }
+
+  get rebalancesCount(): BigInt {
+    let value = this.get("rebalancesCount");
+    return value!.toBigInt();
+  }
+
+  set rebalancesCount(value: BigInt) {
+    this.set("rebalancesCount", Value.fromBigInt(value));
+  }
+
+  get redemptionsCount(): BigInt {
+    let value = this.get("redemptionsCount");
+    return value!.toBigInt();
+  }
+
+  set redemptionsCount(value: BigInt) {
+    this.set("redemptionsCount", Value.fromBigInt(value));
   }
 
   get managementFeesHarvests(): Array<string> {
@@ -549,6 +630,15 @@ export class HarvestManagementFees extends Entity {
   set feesToStrategist(value: BigInt) {
     this.set("feesToStrategist", Value.fromBigInt(value));
   }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class HarvestPerformanceFees extends Entity {
@@ -629,5 +719,14 @@ export class HarvestPerformanceFees extends Entity {
 
   set feesToStrategist(value: BigInt) {
     this.set("feesToStrategist", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }

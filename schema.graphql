@@ -9,9 +9,24 @@ type Vault @entity {
   factory: Factory!
   vault: Bytes! # address
   creator: Bytes! # address
+  
+  # highWaterMark: BigInt!
+
+  accManagementFeesToDAO: BigInt!
+  accPerformanceFeesToDAO: BigInt!
+  accManagementFeesToStrategists: BigInt!
+  accPerformanceFeesToStrategists: BigInt!
+  accManagementFees: BigInt!
+  accPerformanceFees: BigInt!
+
   deposits: [Deposit!]! @derivedFrom(field: "vault")
   rebalances: [Rebalance!]! @derivedFrom(field: "vault")
   redemptions: [Redeem!]! @derivedFrom(field: "vault")
+
+  depositsCount: BigInt!
+  rebalancesCount: BigInt!
+  redemptionsCount: BigInt!
+
   managementFeesHarvests: [HarvestManagementFees!]! @derivedFrom(field: "vault")
   performanceFeesHarvests: [HarvestPerformanceFees!]! @derivedFrom(field: "vault")
   # assetsHourData: [AssetHourData!]! @derivedFrom(field: "pool")
@@ -43,6 +58,7 @@ type Deposit @entity {
   netAmountOut: BigInt!
   toMint:BigInt!
   timestamp: BigInt!
+  # sharePrice: BigInt!
 }
 
 type Redeem @entity {
@@ -51,6 +67,7 @@ type Redeem @entity {
   from: Bytes,
   amountIn: BigInt!
   timestamp: BigInt!
+  # sharePrice: BigInt!
 }
 
 type Rebalance @entity {
@@ -59,6 +76,7 @@ type Rebalance @entity {
   from: Bytes,
   signals: [BigInt!]!
   timestamp: BigInt!
+  # sharePrice: BigInt!
 }
 
 type HarvestManagementFees @entity {
@@ -67,6 +85,7 @@ type HarvestManagementFees @entity {
   fromHarvester: Bytes,
   feesToDAO: BigInt!
   feesToStrategist: BigInt!
+  timestamp: BigInt!
 }
 
 type HarvestPerformanceFees @entity {
@@ -75,4 +94,5 @@ type HarvestPerformanceFees @entity {
   fromHarvester: Bytes,
   feesToDAO: BigInt!
   feesToStrategist: BigInt!
+  timestamp: BigInt!
 }
