@@ -1,0 +1,21 @@
+# Fees Events
+
+{
+    factories(first: 1) {
+    
+    vaults(first: 5) {
+        managementFeesHarvests{
+        id
+        }
+        performanceFeesHarvests{
+        id
+        }
+    }
+  }
+}
+
+# Deposits
+
+# Redemptions
+
+# Rebalance

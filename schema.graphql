@@ -23,9 +23,9 @@ type Vault @entity {
   rebalances: [Rebalance!]! @derivedFrom(field: "vault")
   redemptions: [Redeem!]! @derivedFrom(field: "vault")
 
-  depositsCount: BigInt!
-  rebalancesCount: BigInt!
-  redemptionsCount: BigInt!
+  depositsCount: Int!
+  rebalancesCount: Int!
+  redemptionsCount: Int!
 
   managementFeesHarvests: [HarvestManagementFees!]! @derivedFrom(field: "vault")
   performanceFeesHarvests: [HarvestPerformanceFees!]! @derivedFrom(field: "vault")

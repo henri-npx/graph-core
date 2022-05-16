@@ -10,7 +10,7 @@ import {
   Share,
   Factory,
   Deposit,
-  Rebalance, 
+  Rebalance,
   Redeem
 } from '../types/schema'
 
@@ -36,7 +36,7 @@ export function handleCreateVault(event: VaultCreated): void {
   }
   factory.vaultCount = factory.vaultCount + 1
   factory.save()
-  
+
   let vault = new Vault(event.params.vault.toHexString()) as Vault
   vault.creator = event.params.creator;
   vault.vault = event.params.vault;
@@ -44,15 +44,15 @@ export function handleCreateVault(event: VaultCreated): void {
 
   vault.accManagementFeesToDAO = ZERO_BI
   vault.accPerformanceFeesToDAO = ZERO_BI
-  
+
   vault.accManagementFeesToStrategists = ZERO_BI
   vault.accPerformanceFeesToStrategists = ZERO_BI
   vault.accManagementFees = ZERO_BI
   vault.accPerformanceFees = ZERO_BI
 
-  vault.depositsCount = ZERO_BI
-  vault.rebalancesCount = ZERO_BI
-  vault.redemptionsCount = ZERO_BI
+  vault.depositsCount = 0
+  vault.rebalancesCount = 0
+  vault.redemptionsCount = 0
 
   // let context = new DataSourceTemplate();
   // let context2 = new DataSourceContext();

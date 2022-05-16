@@ -200,31 +200,31 @@ export class Vault extends Entity {
     this.set("redemptions", Value.fromStringArray(value));
   }
 
-  get depositsCount(): BigInt {
+  get depositsCount(): i32 {
     let value = this.get("depositsCount");
-    return value!.toBigInt();
+    return value!.toI32();
   }
 
-  set depositsCount(value: BigInt) {
-    this.set("depositsCount", Value.fromBigInt(value));
+  set depositsCount(value: i32) {
+    this.set("depositsCount", Value.fromI32(value));
   }
 
-  get rebalancesCount(): BigInt {
+  get rebalancesCount(): i32 {
     let value = this.get("rebalancesCount");
-    return value!.toBigInt();
+    return value!.toI32();
   }
 
-  set rebalancesCount(value: BigInt) {
-    this.set("rebalancesCount", Value.fromBigInt(value));
+  set rebalancesCount(value: i32) {
+    this.set("rebalancesCount", Value.fromI32(value));
   }
 
-  get redemptionsCount(): BigInt {
+  get redemptionsCount(): i32 {
     let value = this.get("redemptionsCount");
-    return value!.toBigInt();
+    return value!.toI32();
   }
 
-  set redemptionsCount(value: BigInt) {
-    this.set("redemptionsCount", Value.fromBigInt(value));
+  set redemptionsCount(value: i32) {
+    this.set("redemptionsCount", Value.fromI32(value));
   }
 
   get managementFeesHarvests(): Array<string> {
