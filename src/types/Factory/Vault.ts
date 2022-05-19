@@ -10,6 +10,24 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class AddAsset extends ethereum.Event {
+  get params(): AddAsset__Params {
+    return new AddAsset__Params(this);
+  }
+}
+
+export class AddAsset__Params {
+  _event: AddAsset;
+
+  constructor(event: AddAsset) {
+    this._event = event;
+  }
+
+  get newAsset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class Deposit extends ethereum.Event {
   get params(): Deposit__Params {
     return new Deposit__Params(this);
@@ -23,20 +41,12 @@ export class Deposit__Params {
     this._event = event;
   }
 
-  get user(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get baseTokenAmountIn(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
-  get baseTokenAmount(): BigInt {
+  get sharesMinted(): BigInt {
     return this._event.parameters[1].value.toBigInt();
-  }
-
-  get sharesAmount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get timestamp(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
   }
 }
 
@@ -53,16 +63,12 @@ export class HarvestManagementFees__Params {
     this._event = event;
   }
 
-  get harvester(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get amountToDAO(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
-  get toDAO(): BigInt {
+  get amountToStrategist(): BigInt {
     return this._event.parameters[1].value.toBigInt();
-  }
-
-  get toTrader(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -79,16 +85,30 @@ export class HarvestPerformanceFees__Params {
     this._event = event;
   }
 
-  get harvester(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get amountToDAO(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
-  get toDAO(): BigInt {
+  get amountToStrategist(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
+}
 
-  get toTrader(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+export class Initialized extends ethereum.Event {
+  get params(): Initialized__Params {
+    return new Initialized__Params(this);
+  }
+}
+
+export class Initialized__Params {
+  _event: Initialized;
+
+  constructor(event: Initialized) {
+    this._event = event;
+  }
+
+  get version(): i32 {
+    return this._event.parameters[0].value.toI32();
   }
 }
 
@@ -105,16 +125,12 @@ export class Rebalance__Params {
     this._event = event;
   }
 
-  get trader(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get currentSignals(): Array<BigInt> {
+    return this._event.parameters[0].value.toBigIntArray();
   }
 
-  get signals(): Array<BigInt> {
+  get desiredSignals(): Array<BigInt> {
     return this._event.parameters[1].value.toBigIntArray();
-  }
-
-  get timestamp(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -131,16 +147,12 @@ export class Redeem__Params {
     this._event = event;
   }
 
-  get user(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get amountReceived(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
-  get shareAmount(): BigInt {
+  get shareBurned(): BigInt {
     return this._event.parameters[1].value.toBigInt();
-  }
-
-  get timestamp(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -245,7 +257,7 @@ export class Vault__getConstantPropsResultValue0Struct extends ethereum.Tuple {
     return this[0].toAddress();
   }
 
-  get createdAtBlock(): BigInt {
+  get createdAtBlockNumber(): BigInt {
     return this[1].toBigInt();
   }
 
@@ -263,11 +275,11 @@ export class Vault__getFeesPropsResultValue0Struct extends ethereum.Tuple {
     return this[1].toBigInt();
   }
 
-  get managementFeesDayRate(): BigInt {
+  get managementFeesRate(): BigInt {
     return this[2].toBigInt();
   }
 
-  get managementFeesToTrader(): BigInt {
+  get managementFeesToStrategist(): BigInt {
     return this[3].toBigInt();
   }
 
@@ -275,7 +287,7 @@ export class Vault__getFeesPropsResultValue0Struct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get performanceFeesToTrader(): BigInt {
+  get performanceFeesToStrategist(): BigInt {
     return this[5].toBigInt();
   }
 }
@@ -285,7 +297,7 @@ export class Vault__getHistoryPropsResultValue0Struct extends ethereum.Tuple {
     return this[0].toBigInt();
   }
 
-  get signals(): Array<BigInt> {
+  get prevRebalanceSignals(): Array<BigInt> {
     return this[1].toBigIntArray();
   }
 
@@ -295,6 +307,40 @@ export class Vault__getHistoryPropsResultValue0Struct extends ethereum.Tuple {
 
   get prevMngHarvest(): BigInt {
     return this[3].toBigInt();
+  }
+}
+
+export class Vault__getManagementFeesResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+}
+
+export class Vault__getPerformanceFeesResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
   }
 }
 
@@ -323,8 +369,8 @@ export class Vault__getSecurityPropsResultValue0Struct extends ethereum.Tuple {
     return this[5].toBigInt();
   }
 
-  get swapAdapter(): Address {
-    return this[6].toAddress();
+  get minHarvestThreshold(): BigInt {
+    return this[6].toBigInt();
   }
 }
 
@@ -421,14 +467,22 @@ export class Vault extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  TRADER_ROLE(): Bytes {
-    let result = super.call("TRADER_ROLE", "TRADER_ROLE():(bytes32)", []);
+  STRATEGIST_ROLE(): Bytes {
+    let result = super.call(
+      "STRATEGIST_ROLE",
+      "STRATEGIST_ROLE():(bytes32)",
+      []
+    );
 
     return result[0].toBytes();
   }
 
-  try_TRADER_ROLE(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall("TRADER_ROLE", "TRADER_ROLE():(bytes32)", []);
+  try_STRATEGIST_ROLE(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "STRATEGIST_ROLE",
+      "STRATEGIST_ROLE():(bytes32)",
+      []
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -575,50 +629,68 @@ export class Vault extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getManagementFees(): BigInt {
+  getManagementFees(): Vault__getManagementFeesResult {
     let result = super.call(
       "getManagementFees",
-      "getManagementFees():(uint256)",
+      "getManagementFees():(uint256,uint256)",
       []
     );
 
-    return result[0].toBigInt();
+    return new Vault__getManagementFeesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
   }
 
-  try_getManagementFees(): ethereum.CallResult<BigInt> {
+  try_getManagementFees(): ethereum.CallResult<Vault__getManagementFeesResult> {
     let result = super.tryCall(
       "getManagementFees",
-      "getManagementFees():(uint256)",
+      "getManagementFees():(uint256,uint256)",
       []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(
+      new Vault__getManagementFeesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
   }
 
-  getPerformanceFees(): BigInt {
+  getPerformanceFees(): Vault__getPerformanceFeesResult {
     let result = super.call(
       "getPerformanceFees",
-      "getPerformanceFees():(uint256)",
+      "getPerformanceFees():(uint256,uint256)",
       []
     );
 
-    return result[0].toBigInt();
+    return new Vault__getPerformanceFeesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
   }
 
-  try_getPerformanceFees(): ethereum.CallResult<BigInt> {
+  try_getPerformanceFees(): ethereum.CallResult<
+    Vault__getPerformanceFeesResult
+  > {
     let result = super.tryCall(
       "getPerformanceFees",
-      "getPerformanceFees():(uint256)",
+      "getPerformanceFees():(uint256,uint256)",
       []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(
+      new Vault__getPerformanceFeesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
   }
 
   getRoleAdmin(role: Bytes): Bytes {
@@ -642,10 +714,62 @@ export class Vault extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  getRoleMember(role: Bytes, index: BigInt): Address {
+    let result = super.call(
+      "getRoleMember",
+      "getRoleMember(bytes32,uint256):(address)",
+      [
+        ethereum.Value.fromFixedBytes(role),
+        ethereum.Value.fromUnsignedBigInt(index)
+      ]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getRoleMember(role: Bytes, index: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getRoleMember",
+      "getRoleMember(bytes32,uint256):(address)",
+      [
+        ethereum.Value.fromFixedBytes(role),
+        ethereum.Value.fromUnsignedBigInt(index)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getRoleMemberCount(role: Bytes): BigInt {
+    let result = super.call(
+      "getRoleMemberCount",
+      "getRoleMemberCount(bytes32):(uint256)",
+      [ethereum.Value.fromFixedBytes(role)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getRoleMemberCount(role: Bytes): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getRoleMemberCount",
+      "getRoleMemberCount(bytes32):(uint256)",
+      [ethereum.Value.fromFixedBytes(role)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   getSecurityProps(): Vault__getSecurityPropsResultValue0Struct {
     let result = super.call(
       "getSecurityProps",
-      "getSecurityProps():((uint256,uint256,uint256,uint256,uint256,uint256,address))",
+      "getSecurityProps():((uint256,uint256,uint256,uint256,uint256,uint256,uint256))",
       []
     );
 
@@ -659,7 +783,7 @@ export class Vault extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getSecurityProps",
-      "getSecurityProps():((uint256,uint256,uint256,uint256,uint256,uint256,address))",
+      "getSecurityProps():((uint256,uint256,uint256,uint256,uint256,uint256,uint256))",
       []
     );
     if (result.reverted) {
@@ -669,6 +793,29 @@ export class Vault extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       changetype<Vault__getSecurityPropsResultValue0Struct>(value[0].toTuple())
     );
+  }
+
+  getVaultBalances(): Array<BigInt> {
+    let result = super.call(
+      "getVaultBalances",
+      "getVaultBalances():(uint256[])",
+      []
+    );
+
+    return result[0].toBigIntArray();
+  }
+
+  try_getVaultBalances(): ethereum.CallResult<Array<BigInt>> {
+    let result = super.tryCall(
+      "getVaultBalances",
+      "getVaultBalances():(uint256[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
   }
 
   getVaultStatus(): Vault__getVaultStatusResult {
@@ -799,6 +946,36 @@ export class Vault extends ethereum.SmartContract {
   }
 }
 
+export class AddVaultAssetCall extends ethereum.Call {
+  get inputs(): AddVaultAssetCall__Inputs {
+    return new AddVaultAssetCall__Inputs(this);
+  }
+
+  get outputs(): AddVaultAssetCall__Outputs {
+    return new AddVaultAssetCall__Outputs(this);
+  }
+}
+
+export class AddVaultAssetCall__Inputs {
+  _call: AddVaultAssetCall;
+
+  constructor(call: AddVaultAssetCall) {
+    this._call = call;
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class AddVaultAssetCall__Outputs {
+  _call: AddVaultAssetCall;
+
+  constructor(call: AddVaultAssetCall) {
+    this._call = call;
+  }
+}
+
 export class ApproveForSwapCall extends ethereum.Call {
   get inputs(): ApproveForSwapCall__Inputs {
     return new ApproveForSwapCall__Inputs(this);
@@ -859,32 +1036,6 @@ export class DepositCall__Outputs {
   _call: DepositCall;
 
   constructor(call: DepositCall) {
-    this._call = call;
-  }
-}
-
-export class EnableShareTransferabilityCall extends ethereum.Call {
-  get inputs(): EnableShareTransferabilityCall__Inputs {
-    return new EnableShareTransferabilityCall__Inputs(this);
-  }
-
-  get outputs(): EnableShareTransferabilityCall__Outputs {
-    return new EnableShareTransferabilityCall__Outputs(this);
-  }
-}
-
-export class EnableShareTransferabilityCall__Inputs {
-  _call: EnableShareTransferabilityCall;
-
-  constructor(call: EnableShareTransferabilityCall) {
-    this._call = call;
-  }
-}
-
-export class EnableShareTransferabilityCall__Outputs {
-  _call: EnableShareTransferabilityCall;
-
-  constructor(call: EnableShareTransferabilityCall) {
     this._call = call;
   }
 }
@@ -992,10 +1143,8 @@ export class InitializeCall__Inputs {
     this._call = call;
   }
 
-  get _tokens(): Array<InitializeCall_tokensStruct> {
-    return this._call.inputValues[0].value.toTupleArray<
-      InitializeCall_tokensStruct
-    >();
+  get _tokensAddresses(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
   get _creationProps(): InitializeCall_creationPropsStruct {
@@ -1025,24 +1174,6 @@ export class InitializeCall__Outputs {
   }
 }
 
-export class InitializeCall_tokensStruct extends ethereum.Tuple {
-  get tokenAddress(): Address {
-    return this[0].toAddress();
-  }
-
-  get priceFeedAddress(): Address {
-    return this[1].toAddress();
-  }
-
-  get priceFeedPrecision(): i32 {
-    return this[2].toI32();
-  }
-
-  get denominator(): BigInt {
-    return this[3].toBigInt();
-  }
-}
-
 export class InitializeCall_creationPropsStruct extends ethereum.Tuple {
   get vaultName(): string {
     return this[0].toString();
@@ -1060,7 +1191,7 @@ export class InitializeCall_creationPropsStruct extends ethereum.Tuple {
     return this[3].toString();
   }
 
-  get trader(): Address {
+  get strategist(): Address {
     return this[4].toAddress();
   }
 }
@@ -1074,11 +1205,11 @@ export class InitializeCall_feesPropsStruct extends ethereum.Tuple {
     return this[1].toBigInt();
   }
 
-  get managementFeesDayRate(): BigInt {
+  get managementFeesRate(): BigInt {
     return this[2].toBigInt();
   }
 
-  get managementFeesToTrader(): BigInt {
+  get managementFeesToStrategist(): BigInt {
     return this[3].toBigInt();
   }
 
@@ -1086,7 +1217,7 @@ export class InitializeCall_feesPropsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get performanceFeesToTrader(): BigInt {
+  get performanceFeesToStrategist(): BigInt {
     return this[5].toBigInt();
   }
 }
@@ -1116,8 +1247,8 @@ export class InitializeCall_securityPropsStruct extends ethereum.Tuple {
     return this[5].toBigInt();
   }
 
-  get swapAdapter(): Address {
-    return this[6].toAddress();
+  get minHarvestThreshold(): BigInt {
+    return this[6].toBigInt();
   }
 }
 
@@ -1185,6 +1316,36 @@ export class RedeemCall__Outputs {
   _call: RedeemCall;
 
   constructor(call: RedeemCall) {
+    this._call = call;
+  }
+}
+
+export class RedeemEachCall extends ethereum.Call {
+  get inputs(): RedeemEachCall__Inputs {
+    return new RedeemEachCall__Inputs(this);
+  }
+
+  get outputs(): RedeemEachCall__Outputs {
+    return new RedeemEachCall__Outputs(this);
+  }
+}
+
+export class RedeemEachCall__Inputs {
+  _call: RedeemEachCall;
+
+  constructor(call: RedeemEachCall) {
+    this._call = call;
+  }
+
+  get _amountIn(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class RedeemEachCall__Outputs {
+  _call: RedeemEachCall;
+
+  constructor(call: RedeemEachCall) {
     this._call = call;
   }
 }
@@ -1348,11 +1509,11 @@ export class SetFeesPropsCall_feesPropsStruct extends ethereum.Tuple {
     return this[1].toBigInt();
   }
 
-  get managementFeesDayRate(): BigInt {
+  get managementFeesRate(): BigInt {
     return this[2].toBigInt();
   }
 
-  get managementFeesToTrader(): BigInt {
+  get managementFeesToStrategist(): BigInt {
     return this[3].toBigInt();
   }
 
@@ -1360,7 +1521,7 @@ export class SetFeesPropsCall_feesPropsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get performanceFeesToTrader(): BigInt {
+  get performanceFeesToStrategist(): BigInt {
     return this[5].toBigInt();
   }
 }
@@ -1422,7 +1583,37 @@ export class SetSecurityPropsCall_securityPropsStruct extends ethereum.Tuple {
     return this[5].toBigInt();
   }
 
-  get swapAdapter(): Address {
-    return this[6].toAddress();
+  get minHarvestThreshold(): BigInt {
+    return this[6].toBigInt();
+  }
+}
+
+export class SetShareTransferabilityCall extends ethereum.Call {
+  get inputs(): SetShareTransferabilityCall__Inputs {
+    return new SetShareTransferabilityCall__Inputs(this);
+  }
+
+  get outputs(): SetShareTransferabilityCall__Outputs {
+    return new SetShareTransferabilityCall__Outputs(this);
+  }
+}
+
+export class SetShareTransferabilityCall__Inputs {
+  _call: SetShareTransferabilityCall;
+
+  constructor(call: SetShareTransferabilityCall) {
+    this._call = call;
+  }
+
+  get _status(): boolean {
+    return this._call.inputValues[0].value.toBoolean();
+  }
+}
+
+export class SetShareTransferabilityCall__Outputs {
+  _call: SetShareTransferabilityCall;
+
+  constructor(call: SetShareTransferabilityCall) {
+    this._call = call;
   }
 }

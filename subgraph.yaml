@@ -1,33 +1,65 @@
 specVersion: 0.0.2
 description: Shepherd is a decentralised, community-owned asset management platform
 repository: https://github.com/Uniswap/uniswap-v3-subgraph
+graft:
+    base: QmXQoFNoxPMfEopC1Du1JHudzd4H7aFKqMwpTAnuJkxYgr
+    block: 17883951
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum/contract
-    name: Factory
-    network: bsc
-    source:
-      address: "0x52483Cb6B95bb58E5667dDfc8C2Ae8189fdB6a50"
-      abi: Factory
-      startBlock: 17229600 # To update for new Graphs
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      file: ./src/mappings/factory.ts
-      entities:
-        - Vault
-      abis:
-        - name: Factory
-          file: ./abis/Factory.json
-        - name: Vault
-          file: ./abis/Vault.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-      eventHandlers:
-        - event: CreateVault(address,address)
-          handler: handleCreateVault
+    - kind: ethereum/contract
+      name: Factory
+      network: bsc
+      source:
+          address: "0x52483Cb6B95bb58E5667dDfc8C2Ae8189fdB6a50" # BAD ONE !
+          abi: Factory
+          startBlock: 17229600 # To update for new Graphs
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.5
+          language: wasm/assemblyscript
+          file: ./src/mappings/factory.ts
+          entities:
+              - Vault
+          abis:
+              - name: Factory
+                file: ./abis/Factory.json
+              - name: Vault
+                file: ./abis/Vault.json
+              - name: ERC20
+                file: ./abis/ERC20.json
+          eventHandlers:
+              - event: VaultCreated(address,address,address[])
+                handler: handleVaultCreated
+    - kind: ethereum/contract
+      name: RewardDistributor
+      network: bsc
+      source:
+          address: "0x52483Cb6B95bb58E5667dDfc8C2Ae8189fdB6a50" # BAD ONE !
+          abi: RewardDistributor
+          startBlock: 17883951
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.5
+          language: wasm/assemblyscript
+          file: ./src/mappings/rewardDistributor.ts
+          entities:
+              - RewardDistribution
+          abis:
+              - name: RewardDistributor
+                file: ./abis/RewardDistributor.json
+          eventHandlers:
+              - event: Claimed(uint256,address,uint256)
+                handler: handleClaimed
+              - event: NewDistributionPeriod(uint256,address,uint256)
+                handler: handleNewDistributionPeriod
+              - event: RewardLeftRecovered(uint256,uint256)
+                handler: handleRewardLeftRecovered
+              - event: Staked(address,uint256,uint256)
+                handler: handleStaked
+              - event: Unstaked(address,uint256,bool)
+                handler: handleUnstaked
+
 templates:
     - kind: ethereum/contract
       name: Vault
@@ -49,16 +81,13 @@ templates:
               - name: ERC20
                 file: ./abis/ERC20.json
           eventHandlers:
-              - event: Deposit(indexed address,uint256,uint256,uint256)
+              - event: Deposit(uint256,uint256)
                 handler: handleDeposit
-              - event: Rebalance(address,uint256[],uint256)
-                handler: handleRebalance
-              - event: Redeem(indexed address,uint256,uint256)
-                handler: handleRedeem
-              - event: HarvestManagementFees(address,uint256,uint256)
+              - event: HarvestManagementFees(uint256,uint256)
                 handler: handleHarvestManagementFees
-              - event: HarvestPerformanceFees(address,uint256,uint256)
+              - event: HarvestPerformanceFees(uint256,uint256)
                 handler: handleHarvestPerformanceFees
-              # Add Asset ToDo 
-              # - event: HarvestPerformanceFees(address,uint256,uint256)
-              #   handler: handleHarvestPerformanceFees
+              - event: Rebalance(uint256[],uint256[])
+                handler: handleRebalance
+              - event: Redeem(uint256,uint256)
+                handler: handleRedeem

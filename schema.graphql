@@ -1,98 +1,100 @@
 type Factory @entity {
-  id: ID!
-  vaultCount: Int!
-  vaults: [Vault!]! @derivedFrom(field: "factory")
+    id: ID!
+    vaultCount: Int!
+    vaults: [Vault!]! @derivedFrom(field: "factory")
 }
 
 type Vault @entity {
-  id: ID!
-  factory: Factory!
-  vault: Bytes! # address
-  creator: Bytes! # address
-  
-  # highWaterMark: BigInt!
+    id: ID!
+    factory: Factory!
+    vault: Bytes! # address
+    creator: Bytes! # address
+    share: Bytes! # address
+    tokens: [Bytes!]! # address[]
+    accManagementFeesToDAO: BigInt!
+    accPerformanceFeesToDAO: BigInt!
+    accManagementFeesToStrategists: BigInt!
+    accPerformanceFeesToStrategists: BigInt!
 
-  accManagementFeesToDAO: BigInt!
-  accPerformanceFeesToDAO: BigInt!
-  accManagementFeesToStrategists: BigInt!
-  accPerformanceFeesToStrategists: BigInt!
-  accManagementFees: BigInt!
-  accPerformanceFees: BigInt!
+    deposits: [Deposit!]! @derivedFrom(field: "vault")
+    rebalances: [Rebalance!]! @derivedFrom(field: "vault")
+    redemptions: [Redeem!]! @derivedFrom(field: "vault")
 
-  deposits: [Deposit!]! @derivedFrom(field: "vault")
-  rebalances: [Rebalance!]! @derivedFrom(field: "vault")
-  redemptions: [Redeem!]! @derivedFrom(field: "vault")
+    depositsCount: Int!
+    rebalancesCount: Int!
+    redemptionsCount: Int!
 
-  depositsCount: Int!
-  rebalancesCount: Int!
-  redemptionsCount: Int!
-
-  managementFeesHarvests: [HarvestManagementFees!]! @derivedFrom(field: "vault")
-  performanceFeesHarvests: [HarvestPerformanceFees!]! @derivedFrom(field: "vault")
-  # assetsHourData: [AssetHourData!]! @derivedFrom(field: "pool")
-}
-
-# type AssetData @entity {
-#   # Format: <vault address>-<timestamp>
-#   id: ID!
-#   address: Bytes!
-#   priceUSD: BigInt!
-#   timestamp: BigInt!
-# }
-
-# v2: Sum amountIn deposit 
-# v2: Sum exit Fees generated per vault
-
-type Share @entity {
-  id: ID!
-  totalSupply: BigInt!
-  symbol: String!
-  name: String!
-  decimals: BigInt!
+    managementFeesHarvests: [HarvestManagementFees!]! @derivedFrom(field: "vault")
+    performanceFeesHarvests: [HarvestPerformanceFees!]! @derivedFrom(field: "vault")
 }
 
 type Deposit @entity {
-  id: ID!
-  vault: Vault!
-  from: Bytes,
-  netAmountOut: BigInt!
-  toMint:BigInt!
-  timestamp: BigInt!
-  # sharePrice: BigInt!
+    id: ID!
+    vault: Vault!
+    from: Bytes!
+    baseTokenAmountIn: BigInt!
+    sharesMinted: BigInt!
+    timestamp: BigInt!
 }
 
 type Redeem @entity {
-  id: ID!
-  vault: Vault!
-  from: Bytes,
-  amountIn: BigInt!
-  timestamp: BigInt!
-  # sharePrice: BigInt!
+    id: ID!
+    vault: Vault!
+    from: Bytes!
+    shareBurned: BigInt!
+    amountReceived: BigInt!
+    timestamp: BigInt!
 }
 
 type Rebalance @entity {
-  id: ID!
-  vault: Vault!
-  from: Bytes,
-  signals: [BigInt!]!
-  timestamp: BigInt!
-  # sharePrice: BigInt!
+    id: ID!
+    vault: Vault!
+    from: Bytes!
+    currentSignals: [BigInt!]!
+    desiredSignals: [BigInt!]!
+    timestamp: BigInt!
 }
 
 type HarvestManagementFees @entity {
-  id: ID!
-  vault: Vault!
-  fromHarvester: Bytes,
-  feesToDAO: BigInt!
-  feesToStrategist: BigInt!
-  timestamp: BigInt!
+    id: ID!
+    vault: Vault!
+    from: Bytes!
+    amountToDAO: BigInt!
+    amountToStrategist: BigInt!
+    timestamp: BigInt!
 }
 
 type HarvestPerformanceFees @entity {
-  id: ID!
-  vault: Vault!
-  fromHarvester: Bytes,
-  feesToDAO: BigInt!
-  feesToStrategist: BigInt!
-  timestamp: BigInt!
+    id: ID!
+    vault: Vault!
+    from: Bytes!
+    amountToDAO: BigInt!
+    amountToStrategist: BigInt!
+    timestamp: BigInt!
+}
+
+# Staking Tokenomics
+
+type RewardDistributor @entity {
+    id: ID!
+    accRewards: BigInt!
+    distributionsCount: Int!
+    distributions: [RewardDistribution!]! @derivedFrom(field: "distributor")
+}
+
+type RewardDistribution @entity {
+    id: ID!
+    index: Int!
+    distributor: RewardDistributor!
+    totalAmountRewarded: BigInt!
+    tokenRewardedWith: Bytes!
+    timestamp: BigInt!
+}
+
+type UserReward @entity {
+    id: ID!
+    user: Bytes!
+    accUserRewards: BigInt!
+    rewardedAtPeriods: [Int!]! # Index of trees in which user was eligible
+    rewardsPerPeriods: [BigInt!]! # Amout of reward for a given tree
 }

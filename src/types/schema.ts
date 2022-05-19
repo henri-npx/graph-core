@@ -119,6 +119,24 @@ export class Vault extends Entity {
     this.set("creator", Value.fromBytes(value));
   }
 
+  get share(): Bytes {
+    let value = this.get("share");
+    return value!.toBytes();
+  }
+
+  set share(value: Bytes) {
+    this.set("share", Value.fromBytes(value));
+  }
+
+  get tokens(): Array<Bytes> {
+    let value = this.get("tokens");
+    return value!.toBytesArray();
+  }
+
+  set tokens(value: Array<Bytes>) {
+    this.set("tokens", Value.fromBytesArray(value));
+  }
+
   get accManagementFeesToDAO(): BigInt {
     let value = this.get("accManagementFeesToDAO");
     return value!.toBigInt();
@@ -153,24 +171,6 @@ export class Vault extends Entity {
 
   set accPerformanceFeesToStrategists(value: BigInt) {
     this.set("accPerformanceFeesToStrategists", Value.fromBigInt(value));
-  }
-
-  get accManagementFees(): BigInt {
-    let value = this.get("accManagementFees");
-    return value!.toBigInt();
-  }
-
-  set accManagementFees(value: BigInt) {
-    this.set("accManagementFees", Value.fromBigInt(value));
-  }
-
-  get accPerformanceFees(): BigInt {
-    let value = this.get("accPerformanceFees");
-    return value!.toBigInt();
-  }
-
-  set accPerformanceFees(value: BigInt) {
-    this.set("accPerformanceFees", Value.fromBigInt(value));
   }
 
   get deposits(): Array<string> {
@@ -246,74 +246,6 @@ export class Vault extends Entity {
   }
 }
 
-export class Share extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Share entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Share must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Share", id.toString(), this);
-    }
-  }
-
-  static load(id: string): Share | null {
-    return changetype<Share | null>(store.get("Share", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get totalSupply(): BigInt {
-    let value = this.get("totalSupply");
-    return value!.toBigInt();
-  }
-
-  set totalSupply(value: BigInt) {
-    this.set("totalSupply", Value.fromBigInt(value));
-  }
-
-  get symbol(): string {
-    let value = this.get("symbol");
-    return value!.toString();
-  }
-
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
-  }
-
-  get name(): string {
-    let value = this.get("name");
-    return value!.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get decimals(): BigInt {
-    let value = this.get("decimals");
-    return value!.toBigInt();
-  }
-
-  set decimals(value: BigInt) {
-    this.set("decimals", Value.fromBigInt(value));
-  }
-}
-
 export class Deposit extends Entity {
   constructor(id: string) {
     super();
@@ -354,39 +286,31 @@ export class Deposit extends Entity {
     this.set("vault", Value.fromString(value));
   }
 
-  get from(): Bytes | null {
+  get from(): Bytes {
     let value = this.get("from");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
+    return value!.toBytes();
   }
 
-  set from(value: Bytes | null) {
-    if (!value) {
-      this.unset("from");
-    } else {
-      this.set("from", Value.fromBytes(<Bytes>value));
-    }
+  set from(value: Bytes) {
+    this.set("from", Value.fromBytes(value));
   }
 
-  get netAmountOut(): BigInt {
-    let value = this.get("netAmountOut");
+  get baseTokenAmountIn(): BigInt {
+    let value = this.get("baseTokenAmountIn");
     return value!.toBigInt();
   }
 
-  set netAmountOut(value: BigInt) {
-    this.set("netAmountOut", Value.fromBigInt(value));
+  set baseTokenAmountIn(value: BigInt) {
+    this.set("baseTokenAmountIn", Value.fromBigInt(value));
   }
 
-  get toMint(): BigInt {
-    let value = this.get("toMint");
+  get sharesMinted(): BigInt {
+    let value = this.get("sharesMinted");
     return value!.toBigInt();
   }
 
-  set toMint(value: BigInt) {
-    this.set("toMint", Value.fromBigInt(value));
+  set sharesMinted(value: BigInt) {
+    this.set("sharesMinted", Value.fromBigInt(value));
   }
 
   get timestamp(): BigInt {
@@ -439,30 +363,31 @@ export class Redeem extends Entity {
     this.set("vault", Value.fromString(value));
   }
 
-  get from(): Bytes | null {
+  get from(): Bytes {
     let value = this.get("from");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
+    return value!.toBytes();
   }
 
-  set from(value: Bytes | null) {
-    if (!value) {
-      this.unset("from");
-    } else {
-      this.set("from", Value.fromBytes(<Bytes>value));
-    }
+  set from(value: Bytes) {
+    this.set("from", Value.fromBytes(value));
   }
 
-  get amountIn(): BigInt {
-    let value = this.get("amountIn");
+  get shareBurned(): BigInt {
+    let value = this.get("shareBurned");
     return value!.toBigInt();
   }
 
-  set amountIn(value: BigInt) {
-    this.set("amountIn", Value.fromBigInt(value));
+  set shareBurned(value: BigInt) {
+    this.set("shareBurned", Value.fromBigInt(value));
+  }
+
+  get amountReceived(): BigInt {
+    let value = this.get("amountReceived");
+    return value!.toBigInt();
+  }
+
+  set amountReceived(value: BigInt) {
+    this.set("amountReceived", Value.fromBigInt(value));
   }
 
   get timestamp(): BigInt {
@@ -515,30 +440,31 @@ export class Rebalance extends Entity {
     this.set("vault", Value.fromString(value));
   }
 
-  get from(): Bytes | null {
+  get from(): Bytes {
     let value = this.get("from");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
+    return value!.toBytes();
   }
 
-  set from(value: Bytes | null) {
-    if (!value) {
-      this.unset("from");
-    } else {
-      this.set("from", Value.fromBytes(<Bytes>value));
-    }
+  set from(value: Bytes) {
+    this.set("from", Value.fromBytes(value));
   }
 
-  get signals(): Array<BigInt> {
-    let value = this.get("signals");
+  get currentSignals(): Array<BigInt> {
+    let value = this.get("currentSignals");
     return value!.toBigIntArray();
   }
 
-  set signals(value: Array<BigInt>) {
-    this.set("signals", Value.fromBigIntArray(value));
+  set currentSignals(value: Array<BigInt>) {
+    this.set("currentSignals", Value.fromBigIntArray(value));
+  }
+
+  get desiredSignals(): Array<BigInt> {
+    let value = this.get("desiredSignals");
+    return value!.toBigIntArray();
+  }
+
+  set desiredSignals(value: Array<BigInt>) {
+    this.set("desiredSignals", Value.fromBigIntArray(value));
   }
 
   get timestamp(): BigInt {
@@ -596,39 +522,31 @@ export class HarvestManagementFees extends Entity {
     this.set("vault", Value.fromString(value));
   }
 
-  get fromHarvester(): Bytes | null {
-    let value = this.get("fromHarvester");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
+  get from(): Bytes {
+    let value = this.get("from");
+    return value!.toBytes();
   }
 
-  set fromHarvester(value: Bytes | null) {
-    if (!value) {
-      this.unset("fromHarvester");
-    } else {
-      this.set("fromHarvester", Value.fromBytes(<Bytes>value));
-    }
+  set from(value: Bytes) {
+    this.set("from", Value.fromBytes(value));
   }
 
-  get feesToDAO(): BigInt {
-    let value = this.get("feesToDAO");
+  get amountToDAO(): BigInt {
+    let value = this.get("amountToDAO");
     return value!.toBigInt();
   }
 
-  set feesToDAO(value: BigInt) {
-    this.set("feesToDAO", Value.fromBigInt(value));
+  set amountToDAO(value: BigInt) {
+    this.set("amountToDAO", Value.fromBigInt(value));
   }
 
-  get feesToStrategist(): BigInt {
-    let value = this.get("feesToStrategist");
+  get amountToStrategist(): BigInt {
+    let value = this.get("amountToStrategist");
     return value!.toBigInt();
   }
 
-  set feesToStrategist(value: BigInt) {
-    this.set("feesToStrategist", Value.fromBigInt(value));
+  set amountToStrategist(value: BigInt) {
+    this.set("amountToStrategist", Value.fromBigInt(value));
   }
 
   get timestamp(): BigInt {
@@ -686,39 +604,31 @@ export class HarvestPerformanceFees extends Entity {
     this.set("vault", Value.fromString(value));
   }
 
-  get fromHarvester(): Bytes | null {
-    let value = this.get("fromHarvester");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
+  get from(): Bytes {
+    let value = this.get("from");
+    return value!.toBytes();
   }
 
-  set fromHarvester(value: Bytes | null) {
-    if (!value) {
-      this.unset("fromHarvester");
-    } else {
-      this.set("fromHarvester", Value.fromBytes(<Bytes>value));
-    }
+  set from(value: Bytes) {
+    this.set("from", Value.fromBytes(value));
   }
 
-  get feesToDAO(): BigInt {
-    let value = this.get("feesToDAO");
+  get amountToDAO(): BigInt {
+    let value = this.get("amountToDAO");
     return value!.toBigInt();
   }
 
-  set feesToDAO(value: BigInt) {
-    this.set("feesToDAO", Value.fromBigInt(value));
+  set amountToDAO(value: BigInt) {
+    this.set("amountToDAO", Value.fromBigInt(value));
   }
 
-  get feesToStrategist(): BigInt {
-    let value = this.get("feesToStrategist");
+  get amountToStrategist(): BigInt {
+    let value = this.get("amountToStrategist");
     return value!.toBigInt();
   }
 
-  set feesToStrategist(value: BigInt) {
-    this.set("feesToStrategist", Value.fromBigInt(value));
+  set amountToStrategist(value: BigInt) {
+    this.set("amountToStrategist", Value.fromBigInt(value));
   }
 
   get timestamp(): BigInt {
@@ -728,5 +638,213 @@ export class HarvestPerformanceFees extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class RewardDistributor extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RewardDistributor entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type RewardDistributor must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("RewardDistributor", id.toString(), this);
+    }
+  }
+
+  static load(id: string): RewardDistributor | null {
+    return changetype<RewardDistributor | null>(
+      store.get("RewardDistributor", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get accRewards(): BigInt {
+    let value = this.get("accRewards");
+    return value!.toBigInt();
+  }
+
+  set accRewards(value: BigInt) {
+    this.set("accRewards", Value.fromBigInt(value));
+  }
+
+  get distributionsCount(): i32 {
+    let value = this.get("distributionsCount");
+    return value!.toI32();
+  }
+
+  set distributionsCount(value: i32) {
+    this.set("distributionsCount", Value.fromI32(value));
+  }
+
+  get distributions(): Array<string> {
+    let value = this.get("distributions");
+    return value!.toStringArray();
+  }
+
+  set distributions(value: Array<string>) {
+    this.set("distributions", Value.fromStringArray(value));
+  }
+}
+
+export class RewardDistribution extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RewardDistribution entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type RewardDistribution must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("RewardDistribution", id.toString(), this);
+    }
+  }
+
+  static load(id: string): RewardDistribution | null {
+    return changetype<RewardDistribution | null>(
+      store.get("RewardDistribution", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get index(): i32 {
+    let value = this.get("index");
+    return value!.toI32();
+  }
+
+  set index(value: i32) {
+    this.set("index", Value.fromI32(value));
+  }
+
+  get distributor(): string {
+    let value = this.get("distributor");
+    return value!.toString();
+  }
+
+  set distributor(value: string) {
+    this.set("distributor", Value.fromString(value));
+  }
+
+  get totalAmountRewarded(): BigInt {
+    let value = this.get("totalAmountRewarded");
+    return value!.toBigInt();
+  }
+
+  set totalAmountRewarded(value: BigInt) {
+    this.set("totalAmountRewarded", Value.fromBigInt(value));
+  }
+
+  get tokenRewardedWith(): Bytes {
+    let value = this.get("tokenRewardedWith");
+    return value!.toBytes();
+  }
+
+  set tokenRewardedWith(value: Bytes) {
+    this.set("tokenRewardedWith", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class UserReward extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save UserReward entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type UserReward must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("UserReward", id.toString(), this);
+    }
+  }
+
+  static load(id: string): UserReward | null {
+    return changetype<UserReward | null>(store.get("UserReward", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    return value!.toBytes();
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get accUserRewards(): BigInt {
+    let value = this.get("accUserRewards");
+    return value!.toBigInt();
+  }
+
+  set accUserRewards(value: BigInt) {
+    this.set("accUserRewards", Value.fromBigInt(value));
+  }
+
+  get rewardedAtPeriods(): Array<i32> {
+    let value = this.get("rewardedAtPeriods");
+    return value!.toI32Array();
+  }
+
+  set rewardedAtPeriods(value: Array<i32>) {
+    this.set("rewardedAtPeriods", Value.fromI32Array(value));
+  }
+
+  get rewardsPerPeriods(): Array<BigInt> {
+    let value = this.get("rewardsPerPeriods");
+    return value!.toBigIntArray();
+  }
+
+  set rewardsPerPeriods(value: Array<BigInt>) {
+    this.set("rewardsPerPeriods", Value.fromBigIntArray(value));
   }
 }

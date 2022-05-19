@@ -10,25 +10,25 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class CreateVault extends ethereum.Event {
-  get params(): CreateVault__Params {
-    return new CreateVault__Params(this);
+export class AddTokensAndPriceFeeds extends ethereum.Event {
+  get params(): AddTokensAndPriceFeeds__Params {
+    return new AddTokensAndPriceFeeds__Params(this);
   }
 }
 
-export class CreateVault__Params {
-  _event: CreateVault;
+export class AddTokensAndPriceFeeds__Params {
+  _event: AddTokensAndPriceFeeds;
 
-  constructor(event: CreateVault) {
+  constructor(event: AddTokensAndPriceFeeds) {
     this._event = event;
   }
 
-  get vault(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get tokens(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
   }
 
-  get creator(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get priceFeeds(): Array<Address> {
+    return this._event.parameters[1].value.toAddressArray();
   }
 }
 
@@ -130,6 +130,32 @@ export class SetSwapContracts__Params {
   }
 }
 
+export class VaultCreated extends ethereum.Event {
+  get params(): VaultCreated__Params {
+    return new VaultCreated__Params(this);
+  }
+}
+
+export class VaultCreated__Params {
+  _event: VaultCreated;
+
+  constructor(event: VaultCreated) {
+    this._event = event;
+  }
+
+  get vault(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get share(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get tokens(): Array<Address> {
+    return this._event.parameters[2].value.toAddressArray();
+  }
+}
+
 export class Factory__getFactoryStateResult {
   value0: BigInt;
   value1: Address;
@@ -137,7 +163,6 @@ export class Factory__getFactoryStateResult {
   value3: Address;
   value4: Address;
   value5: Address;
-  value6: Address;
 
   constructor(
     value0: BigInt,
@@ -145,8 +170,7 @@ export class Factory__getFactoryStateResult {
     value2: Address,
     value3: Address,
     value4: Address,
-    value5: Address,
-    value6: Address
+    value5: Address
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -154,7 +178,6 @@ export class Factory__getFactoryStateResult {
     this.value3 = value3;
     this.value4 = value4;
     this.value5 = value5;
-    this.value6 = value6;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -165,7 +188,99 @@ export class Factory__getFactoryStateResult {
     map.set("value3", ethereum.Value.fromAddress(this.value3));
     map.set("value4", ethereum.Value.fromAddress(this.value4));
     map.set("value5", ethereum.Value.fromAddress(this.value5));
-    map.set("value6", ethereum.Value.fromAddress(this.value6));
+    return map;
+  }
+}
+
+export class Factory__getRolesPerVaultResult {
+  value0: Array<Address>;
+  value1: Array<Address>;
+
+  constructor(value0: Array<Address>, value1: Array<Address>) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddressArray(this.value0));
+    map.set("value1", ethereum.Value.fromAddressArray(this.value1));
+    return map;
+  }
+}
+
+export class Factory__getShareStateResult {
+  value0: Address;
+  value1: string;
+  value2: string;
+  value3: i32;
+  value4: BigInt;
+  value5: boolean;
+
+  constructor(
+    value0: Address,
+    value1: string,
+    value2: string,
+    value3: i32,
+    value4: BigInt,
+    value5: boolean
+  ) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+    this.value4 = value4;
+    this.value5 = value5;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromString(this.value2));
+    map.set(
+      "value3",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value3))
+    );
+    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value5", ethereum.Value.fromBoolean(this.value5));
+    return map;
+  }
+}
+
+export class Factory__getUserShareStateResult {
+  value0: Address;
+  value1: BigInt;
+  value2: BigInt;
+
+  constructor(value0: Address, value1: BigInt, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+}
+
+export class Factory__getVaultOngoingFeesResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     return map;
   }
 }
@@ -193,7 +308,7 @@ export class Factory__getVaultStateResultConstantPropsStruct extends ethereum.Tu
     return this[0].toAddress();
   }
 
-  get createdAtBlock(): BigInt {
+  get createdAtBlockNumber(): BigInt {
     return this[1].toBigInt();
   }
 
@@ -207,7 +322,7 @@ export class Factory__getVaultStateResultHistoryPropsStruct extends ethereum.Tup
     return this[0].toBigInt();
   }
 
-  get signals(): Array<BigInt> {
+  get prevRebalanceSignals(): Array<BigInt> {
     return this[1].toBigIntArray();
   }
 
@@ -247,11 +362,11 @@ export class Factory__getVaultStateResultFeesPropsStruct extends ethereum.Tuple 
     return this[1].toBigInt();
   }
 
-  get managementFeesDayRate(): BigInt {
+  get managementFeesRate(): BigInt {
     return this[2].toBigInt();
   }
 
-  get managementFeesToTrader(): BigInt {
+  get managementFeesToStrategist(): BigInt {
     return this[3].toBigInt();
   }
 
@@ -259,7 +374,7 @@ export class Factory__getVaultStateResultFeesPropsStruct extends ethereum.Tuple 
     return this[4].toBigInt();
   }
 
-  get performanceFeesToTrader(): BigInt {
+  get performanceFeesToStrategist(): BigInt {
     return this[5].toBigInt();
   }
 }
@@ -289,8 +404,8 @@ export class Factory__getVaultStateResultSecurityPropsStruct extends ethereum.Tu
     return this[5].toBigInt();
   }
 
-  get swapAdapter(): Address {
-    return this[6].toAddress();
+  get minHarvestThreshold(): BigInt {
+    return this[6].toBigInt();
   }
 }
 
@@ -302,8 +417,9 @@ export class Factory__getVaultStateResult {
   value4: Factory__getVaultStateResultFeesPropsStruct;
   value5: Factory__getVaultStateResultSecurityPropsStruct;
   value6: Array<BigInt>;
-  value7: BigInt;
+  value7: Array<BigInt>;
   value8: BigInt;
+  value9: BigInt;
 
   constructor(
     value0: Array<Factory__getVaultStateResultVTokensStruct>,
@@ -313,8 +429,9 @@ export class Factory__getVaultStateResult {
     value4: Factory__getVaultStateResultFeesPropsStruct,
     value5: Factory__getVaultStateResultSecurityPropsStruct,
     value6: Array<BigInt>,
-    value7: BigInt,
-    value8: BigInt
+    value7: Array<BigInt>,
+    value8: BigInt,
+    value9: BigInt
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -325,6 +442,7 @@ export class Factory__getVaultStateResult {
     this.value6 = value6;
     this.value7 = value7;
     this.value8 = value8;
+    this.value9 = value9;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -336,8 +454,9 @@ export class Factory__getVaultStateResult {
     map.set("value4", ethereum.Value.fromTuple(this.value4));
     map.set("value5", ethereum.Value.fromTuple(this.value5));
     map.set("value6", ethereum.Value.fromUnsignedBigIntArray(this.value6));
-    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
+    map.set("value7", ethereum.Value.fromUnsignedBigIntArray(this.value7));
     map.set("value8", ethereum.Value.fromUnsignedBigInt(this.value8));
+    map.set("value9", ethereum.Value.fromUnsignedBigInt(this.value9));
     return map;
   }
 }
@@ -359,6 +478,21 @@ export class Factory extends ethereum.SmartContract {
       "accessManager():(address)",
       []
     );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  beacon(): Address {
+    let result = super.call("beacon", "beacon():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_beacon(): ethereum.CallResult<Address> {
+    let result = super.tryCall("beacon", "beacon():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -396,10 +530,29 @@ export class Factory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  getAllVaults(): Array<Address> {
+    let result = super.call("getAllVaults", "getAllVaults():(address[])", []);
+
+    return result[0].toAddressArray();
+  }
+
+  try_getAllVaults(): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getAllVaults",
+      "getAllVaults():(address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
   getFactoryState(): Factory__getFactoryStateResult {
     let result = super.call(
       "getFactoryState",
-      "getFactoryState():(uint256,address,address,address,address,address,address)",
+      "getFactoryState():(uint256,address,address,address,address,address)",
       []
     );
 
@@ -409,15 +562,14 @@ export class Factory extends ethereum.SmartContract {
       result[2].toAddress(),
       result[3].toAddress(),
       result[4].toAddress(),
-      result[5].toAddress(),
-      result[6].toAddress()
+      result[5].toAddress()
     );
   }
 
   try_getFactoryState(): ethereum.CallResult<Factory__getFactoryStateResult> {
     let result = super.tryCall(
       "getFactoryState",
-      "getFactoryState():(uint256,address,address,address,address,address,address)",
+      "getFactoryState():(uint256,address,address,address,address,address)",
       []
     );
     if (result.reverted) {
@@ -431,27 +583,26 @@ export class Factory extends ethereum.SmartContract {
         value[2].toAddress(),
         value[3].toAddress(),
         value[4].toAddress(),
-        value[5].toAddress(),
-        value[6].toAddress()
+        value[5].toAddress()
       )
     );
   }
 
-  getFeesReceiver(feeType: BigInt): Address {
+  getFeesReceiver(_feeType: BigInt): Address {
     let result = super.call(
       "getFeesReceiver",
       "getFeesReceiver(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(feeType)]
+      [ethereum.Value.fromUnsignedBigInt(_feeType)]
     );
 
     return result[0].toAddress();
   }
 
-  try_getFeesReceiver(feeType: BigInt): ethereum.CallResult<Address> {
+  try_getFeesReceiver(_feeType: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "getFeesReceiver",
       "getFeesReceiver(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(feeType)]
+      [ethereum.Value.fromUnsignedBigInt(_feeType)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -460,11 +611,157 @@ export class Factory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getVaultState(vault: Address): Factory__getVaultStateResult {
+  getRolesPerVault(_vault: Address): Factory__getRolesPerVaultResult {
+    let result = super.call(
+      "getRolesPerVault",
+      "getRolesPerVault(address):(address[],address[])",
+      [ethereum.Value.fromAddress(_vault)]
+    );
+
+    return new Factory__getRolesPerVaultResult(
+      result[0].toAddressArray(),
+      result[1].toAddressArray()
+    );
+  }
+
+  try_getRolesPerVault(
+    _vault: Address
+  ): ethereum.CallResult<Factory__getRolesPerVaultResult> {
+    let result = super.tryCall(
+      "getRolesPerVault",
+      "getRolesPerVault(address):(address[],address[])",
+      [ethereum.Value.fromAddress(_vault)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Factory__getRolesPerVaultResult(
+        value[0].toAddressArray(),
+        value[1].toAddressArray()
+      )
+    );
+  }
+
+  getShareState(_vault: Address): Factory__getShareStateResult {
+    let result = super.call(
+      "getShareState",
+      "getShareState(address):(address,string,string,uint8,uint256,bool)",
+      [ethereum.Value.fromAddress(_vault)]
+    );
+
+    return new Factory__getShareStateResult(
+      result[0].toAddress(),
+      result[1].toString(),
+      result[2].toString(),
+      result[3].toI32(),
+      result[4].toBigInt(),
+      result[5].toBoolean()
+    );
+  }
+
+  try_getShareState(
+    _vault: Address
+  ): ethereum.CallResult<Factory__getShareStateResult> {
+    let result = super.tryCall(
+      "getShareState",
+      "getShareState(address):(address,string,string,uint8,uint256,bool)",
+      [ethereum.Value.fromAddress(_vault)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Factory__getShareStateResult(
+        value[0].toAddress(),
+        value[1].toString(),
+        value[2].toString(),
+        value[3].toI32(),
+        value[4].toBigInt(),
+        value[5].toBoolean()
+      )
+    );
+  }
+
+  getUserShareState(
+    _vault: Address,
+    _user: Address
+  ): Factory__getUserShareStateResult {
+    let result = super.call(
+      "getUserShareState",
+      "getUserShareState(address,address):(address,uint256,uint256)",
+      [ethereum.Value.fromAddress(_vault), ethereum.Value.fromAddress(_user)]
+    );
+
+    return new Factory__getUserShareStateResult(
+      result[0].toAddress(),
+      result[1].toBigInt(),
+      result[2].toBigInt()
+    );
+  }
+
+  try_getUserShareState(
+    _vault: Address,
+    _user: Address
+  ): ethereum.CallResult<Factory__getUserShareStateResult> {
+    let result = super.tryCall(
+      "getUserShareState",
+      "getUserShareState(address,address):(address,uint256,uint256)",
+      [ethereum.Value.fromAddress(_vault), ethereum.Value.fromAddress(_user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Factory__getUserShareStateResult(
+        value[0].toAddress(),
+        value[1].toBigInt(),
+        value[2].toBigInt()
+      )
+    );
+  }
+
+  getVaultOngoingFees(_vault: Address): Factory__getVaultOngoingFeesResult {
+    let result = super.call(
+      "getVaultOngoingFees",
+      "getVaultOngoingFees(address):(uint256,uint256)",
+      [ethereum.Value.fromAddress(_vault)]
+    );
+
+    return new Factory__getVaultOngoingFeesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_getVaultOngoingFees(
+    _vault: Address
+  ): ethereum.CallResult<Factory__getVaultOngoingFeesResult> {
+    let result = super.tryCall(
+      "getVaultOngoingFees",
+      "getVaultOngoingFees(address):(uint256,uint256)",
+      [ethereum.Value.fromAddress(_vault)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Factory__getVaultOngoingFeesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
+  getVaultState(_vault: Address): Factory__getVaultStateResult {
     let result = super.call(
       "getVaultState",
-      "getVaultState(address):((address,address,uint8,uint256)[],(address,uint256,address),(uint256,uint256[],uint256,uint256),(bool,uint8,string,string),(address,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,address),uint256[],uint256,uint256)",
-      [ethereum.Value.fromAddress(vault)]
+      "getVaultState(address):((address,address,uint8,uint256)[],(address,uint256,address),(uint256,uint256[],uint256,uint256),(bool,uint8,string,string),(address,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256),uint256[],uint256[],uint256,uint256)",
+      [ethereum.Value.fromAddress(_vault)]
     );
 
     return new Factory__getVaultStateResult(
@@ -485,18 +782,19 @@ export class Factory extends ethereum.SmartContract {
         result[5].toTuple()
       ),
       result[6].toBigIntArray(),
-      result[7].toBigInt(),
-      result[8].toBigInt()
+      result[7].toBigIntArray(),
+      result[8].toBigInt(),
+      result[9].toBigInt()
     );
   }
 
   try_getVaultState(
-    vault: Address
+    _vault: Address
   ): ethereum.CallResult<Factory__getVaultStateResult> {
     let result = super.tryCall(
       "getVaultState",
-      "getVaultState(address):((address,address,uint8,uint256)[],(address,uint256,address),(uint256,uint256[],uint256,uint256),(bool,uint8,string,string),(address,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,address),uint256[],uint256,uint256)",
-      [ethereum.Value.fromAddress(vault)]
+      "getVaultState(address):((address,address,uint8,uint256)[],(address,uint256,address),(uint256,uint256[],uint256,uint256),(bool,uint8,string,string),(address,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256),uint256[],uint256[],uint256,uint256)",
+      [ethereum.Value.fromAddress(_vault)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -521,8 +819,9 @@ export class Factory extends ethereum.SmartContract {
           value[5].toTuple()
         ),
         value[6].toBigIntArray(),
-        value[7].toBigInt(),
-        value[8].toBigInt()
+        value[7].toBigIntArray(),
+        value[8].toBigInt(),
+        value[9].toBigInt()
       )
     );
   }
@@ -603,6 +902,36 @@ export class Factory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  shareLogic(): Address {
+    let result = super.call("shareLogic", "shareLogic():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_shareLogic(): ethereum.CallResult<Address> {
+    let result = super.tryCall("shareLogic", "shareLogic():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  swapAdapter(): Address {
+    let result = super.call("swapAdapter", "swapAdapter():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_swapAdapter(): ethereum.CallResult<Address> {
+    let result = super.tryCall("swapAdapter", "swapAdapter():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   swapProxy(): Address {
     let result = super.call("swapProxy", "swapProxy():(address)", []);
 
@@ -633,14 +962,22 @@ export class Factory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  vLogic(): Address {
-    let result = super.call("vLogic", "vLogic():(address)", []);
+  tokensPriceFeed(param0: Address): Address {
+    let result = super.call(
+      "tokensPriceFeed",
+      "tokensPriceFeed(address):(address)",
+      [ethereum.Value.fromAddress(param0)]
+    );
 
     return result[0].toAddress();
   }
 
-  try_vLogic(): ethereum.CallResult<Address> {
-    let result = super.tryCall("vLogic", "vLogic():(address)", []);
+  try_tokensPriceFeed(param0: Address): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "tokensPriceFeed",
+      "tokensPriceFeed(address):(address)",
+      [ethereum.Value.fromAddress(param0)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -685,7 +1022,7 @@ export class ConstructorCall__Inputs {
     this._call = call;
   }
 
-  get _vLogic(): Address {
+  get _shareLogic(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
@@ -701,12 +1038,20 @@ export class ConstructorCall__Inputs {
     return this._call.inputValues[3].value.toAddress();
   }
 
-  get _swapProxy(): Address {
+  get _swapRouter(): Address {
     return this._call.inputValues[4].value.toAddress();
   }
 
-  get _swapRouter(): Address {
+  get _swapProxy(): Address {
     return this._call.inputValues[5].value.toAddress();
+  }
+
+  get _swapAdapter(): Address {
+    return this._call.inputValues[6].value.toAddress();
+  }
+
+  get _beacon(): Address {
+    return this._call.inputValues[7].value.toAddress();
   }
 }
 
@@ -718,32 +1063,36 @@ export class ConstructorCall__Outputs {
   }
 }
 
-export class AddTokensToWhitelistCall extends ethereum.Call {
-  get inputs(): AddTokensToWhitelistCall__Inputs {
-    return new AddTokensToWhitelistCall__Inputs(this);
+export class AddTokensAndPriceFeedsToWLCall extends ethereum.Call {
+  get inputs(): AddTokensAndPriceFeedsToWLCall__Inputs {
+    return new AddTokensAndPriceFeedsToWLCall__Inputs(this);
   }
 
-  get outputs(): AddTokensToWhitelistCall__Outputs {
-    return new AddTokensToWhitelistCall__Outputs(this);
+  get outputs(): AddTokensAndPriceFeedsToWLCall__Outputs {
+    return new AddTokensAndPriceFeedsToWLCall__Outputs(this);
   }
 }
 
-export class AddTokensToWhitelistCall__Inputs {
-  _call: AddTokensToWhitelistCall;
+export class AddTokensAndPriceFeedsToWLCall__Inputs {
+  _call: AddTokensAndPriceFeedsToWLCall;
 
-  constructor(call: AddTokensToWhitelistCall) {
+  constructor(call: AddTokensAndPriceFeedsToWLCall) {
     this._call = call;
   }
 
   get _tokens(): Array<Address> {
     return this._call.inputValues[0].value.toAddressArray();
   }
+
+  get _priceFeeds(): Array<Address> {
+    return this._call.inputValues[1].value.toAddressArray();
+  }
 }
 
-export class AddTokensToWhitelistCall__Outputs {
-  _call: AddTokensToWhitelistCall;
+export class AddTokensAndPriceFeedsToWLCall__Outputs {
+  _call: AddTokensAndPriceFeedsToWLCall;
 
-  constructor(call: AddTokensToWhitelistCall) {
+  constructor(call: AddTokensAndPriceFeedsToWLCall) {
     this._call = call;
   }
 }
@@ -765,10 +1114,8 @@ export class CreateVaultCall__Inputs {
     this._call = call;
   }
 
-  get _tokens(): Array<CreateVaultCall_tokensStruct> {
-    return this._call.inputValues[0].value.toTupleArray<
-      CreateVaultCall_tokensStruct
-    >();
+  get _tokensAddresses(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
   }
 
   get _creationProps(): CreateVaultCall_creationPropsStruct {
@@ -798,24 +1145,6 @@ export class CreateVaultCall__Outputs {
   }
 }
 
-export class CreateVaultCall_tokensStruct extends ethereum.Tuple {
-  get tokenAddress(): Address {
-    return this[0].toAddress();
-  }
-
-  get priceFeedAddress(): Address {
-    return this[1].toAddress();
-  }
-
-  get priceFeedPrecision(): i32 {
-    return this[2].toI32();
-  }
-
-  get denominator(): BigInt {
-    return this[3].toBigInt();
-  }
-}
-
 export class CreateVaultCall_creationPropsStruct extends ethereum.Tuple {
   get vaultName(): string {
     return this[0].toString();
@@ -833,7 +1162,7 @@ export class CreateVaultCall_creationPropsStruct extends ethereum.Tuple {
     return this[3].toString();
   }
 
-  get trader(): Address {
+  get strategist(): Address {
     return this[4].toAddress();
   }
 }
@@ -847,11 +1176,11 @@ export class CreateVaultCall_feesPropsStruct extends ethereum.Tuple {
     return this[1].toBigInt();
   }
 
-  get managementFeesDayRate(): BigInt {
+  get managementFeesRate(): BigInt {
     return this[2].toBigInt();
   }
 
-  get managementFeesToTrader(): BigInt {
+  get managementFeesToStrategist(): BigInt {
     return this[3].toBigInt();
   }
 
@@ -859,7 +1188,7 @@ export class CreateVaultCall_feesPropsStruct extends ethereum.Tuple {
     return this[4].toBigInt();
   }
 
-  get performanceFeesToTrader(): BigInt {
+  get performanceFeesToStrategist(): BigInt {
     return this[5].toBigInt();
   }
 }
@@ -889,8 +1218,8 @@ export class CreateVaultCall_securityPropsStruct extends ethereum.Tuple {
     return this[5].toBigInt();
   }
 
-  get swapAdapter(): Address {
-    return this[6].toAddress();
+  get minHarvestThreshold(): BigInt {
+    return this[6].toBigInt();
   }
 }
 
@@ -967,7 +1296,7 @@ export class SetAccessManagerCall__Inputs {
     this._call = call;
   }
 
-  get newAccessManager(): Address {
+  get _newAccessManager(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
@@ -997,7 +1326,7 @@ export class SetFeesManagerCall__Inputs {
     this._call = call;
   }
 
-  get newFeesManager(): Address {
+  get _newFeesManager(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
@@ -1027,7 +1356,7 @@ export class SetHarvesterCall__Inputs {
     this._call = call;
   }
 
-  get newHarvester(): Address {
+  get _newHarvester(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
@@ -1057,11 +1386,11 @@ export class SetSwapContractsCall__Inputs {
     this._call = call;
   }
 
-  get newSwapRouter(): Address {
+  get _newSwapRouter(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get newSwapProxy(): Address {
+  get _newSwapProxy(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }
