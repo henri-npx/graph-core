@@ -8,6 +8,7 @@ import {
 } from '../types/schema'
 
 import {
+  Vault as VaultContract,
   Deposit as DepositEvent,
   Rebalance as RebalanceEvent,
   Redeem as RedeemEvent,
@@ -24,6 +25,11 @@ export function handleDeposit(event: DepositEvent): void {
   deposit.sharesMinted = event.params.sharesMinted;
   deposit.baseTokenAmountIn = event.params.baseTokenAmountIn;
   deposit.timestamp = event.block.timestamp;
+  // Storage Reads
+  const vaultContract = VaultContract.bind(event.address);
+  const vaultStatusAfter = vaultContract.getVaultStatus();
+  deposit.sharePriceAfter = vaultStatusAfter.value2;
+  // Save
   deposit.save()
   vault.depositsCount = vault.depositsCount + 1
   vault.save()
@@ -37,7 +43,14 @@ export function handleRebalance(event: RebalanceEvent): void {
   newRebalance.from = event.transaction.from;
   newRebalance.currentSignals = event.params.currentSignals;
   newRebalance.desiredSignals = event.params.desiredSignals;
-  newRebalance.timestamp = event.block.timestamp;;
+  newRebalance.timestamp = event.block.timestamp;
+
+  // Storage Reads
+  const vaultContract = VaultContract.bind(event.address);
+  const vaultStatusAfter = vaultContract.getVaultStatus();
+  newRebalance.recordedSignals = vaultStatusAfter.value0;
+
+  // Save
   newRebalance.save()
   vault.rebalancesCount = vault.rebalancesCount + 1
   vault.save()
@@ -54,6 +67,12 @@ export function handleRedeem(event: RedeemEvent): void {
   newRedeem.shareBurned = event.params.shareBurned;
   newRedeem.amountReceived = event.params.amountReceived;
   newRedeem.timestamp = event.block.timestamp;
+
+  // Storage Reads
+  const vaultContract = VaultContract.bind(event.address);
+  const vaultStatusAfter = vaultContract.getVaultStatus();
+  newRedeem.sharePriceAfter = vaultStatusAfter.value2;
+
   newRedeem.save()
   vault.redemptionsCount = vault.redemptionsCount + 1
   vault.save()

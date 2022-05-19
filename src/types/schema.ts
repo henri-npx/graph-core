@@ -321,6 +321,15 @@ export class Deposit extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+
+  get sharePriceAfter(): BigInt {
+    let value = this.get("sharePriceAfter");
+    return value!.toBigInt();
+  }
+
+  set sharePriceAfter(value: BigInt) {
+    this.set("sharePriceAfter", Value.fromBigInt(value));
+  }
 }
 
 export class Redeem extends Entity {
@@ -398,6 +407,15 @@ export class Redeem extends Entity {
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
   }
+
+  get sharePriceAfter(): BigInt {
+    let value = this.get("sharePriceAfter");
+    return value!.toBigInt();
+  }
+
+  set sharePriceAfter(value: BigInt) {
+    this.set("sharePriceAfter", Value.fromBigInt(value));
+  }
 }
 
 export class Rebalance extends Entity {
@@ -467,6 +485,15 @@ export class Rebalance extends Entity {
     this.set("desiredSignals", Value.fromBigIntArray(value));
   }
 
+  get recordedSignals(): Array<BigInt> {
+    let value = this.get("recordedSignals");
+    return value!.toBigIntArray();
+  }
+
+  set recordedSignals(value: Array<BigInt>) {
+    this.set("recordedSignals", Value.fromBigIntArray(value));
+  }
+
   get timestamp(): BigInt {
     let value = this.get("timestamp");
     return value!.toBigInt();
@@ -474,6 +501,15 @@ export class Rebalance extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get sharePriceAfter(): BigInt {
+    let value = this.get("sharePriceAfter");
+    return value!.toBigInt();
+  }
+
+  set sharePriceAfter(value: BigInt) {
+    this.set("sharePriceAfter", Value.fromBigInt(value));
   }
 }
 

@@ -35,6 +35,7 @@ type Deposit @entity {
     baseTokenAmountIn: BigInt!
     sharesMinted: BigInt!
     timestamp: BigInt!
+    sharePriceAfter: BigInt!
 }
 
 type Redeem @entity {
@@ -44,6 +45,7 @@ type Redeem @entity {
     shareBurned: BigInt!
     amountReceived: BigInt!
     timestamp: BigInt!
+    sharePriceAfter: BigInt!
 }
 
 type Rebalance @entity {
@@ -52,7 +54,9 @@ type Rebalance @entity {
     from: Bytes!
     currentSignals: [BigInt!]!
     desiredSignals: [BigInt!]!
+    recordedSignals: [BigInt!]!
     timestamp: BigInt!
+    sharePriceAfter: BigInt!
 }
 
 type HarvestManagementFees @entity {
