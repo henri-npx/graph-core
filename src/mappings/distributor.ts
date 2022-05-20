@@ -51,8 +51,11 @@ export function handleClaimed(event: ClaimedEvent): void {
         user.rewardedAtPeriods = [];
         user.rewardsPerPeriods = [];
     };
-    user.rewardedAtPeriods.push(event.params.index.toI32());
-    user.rewardsPerPeriods.push(event.params.amount);
+
+    const rewardedAtPeriods = event.params.index.toI32();
+    const rewardsPerPeriods = event.params.amount;
+    user.rewardedAtPeriods.push(rewardedAtPeriods);
+    user.rewardsPerPeriods.push(rewardsPerPeriods);
     user.accUserRewards = user.accUserRewards.plus(event.params.amount);
     user.save();
 }

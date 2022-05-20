@@ -244,6 +244,119 @@ export class Vault extends Entity {
   set performanceFeesHarvests(value: Array<string>) {
     this.set("performanceFeesHarvests", Value.fromStringArray(value));
   }
+
+  get snapshots(): Array<string> {
+    let value = this.get("snapshots");
+    return value!.toStringArray();
+  }
+
+  set snapshots(value: Array<string>) {
+    this.set("snapshots", Value.fromStringArray(value));
+  }
+}
+
+export class VaultSnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save VaultSnapshot entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type VaultSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("VaultSnapshot", id.toString(), this);
+    }
+  }
+
+  static load(id: string): VaultSnapshot | null {
+    return changetype<VaultSnapshot | null>(store.get("VaultSnapshot", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get factory(): string {
+    let value = this.get("factory");
+    return value!.toString();
+  }
+
+  set factory(value: string) {
+    this.set("factory", Value.fromString(value));
+  }
+
+  get vault(): string {
+    let value = this.get("vault");
+    return value!.toString();
+  }
+
+  set vault(value: string) {
+    this.set("vault", Value.fromString(value));
+  }
+
+  get sharePrice(): BigInt {
+    let value = this.get("sharePrice");
+    return value!.toBigInt();
+  }
+
+  set sharePrice(value: BigInt) {
+    this.set("sharePrice", Value.fromBigInt(value));
+  }
+
+  get positions(): Array<BigInt> {
+    let value = this.get("positions");
+    return value!.toBigIntArray();
+  }
+
+  set positions(value: Array<BigInt>) {
+    this.set("positions", Value.fromBigIntArray(value));
+  }
+
+  get tvl(): BigInt {
+    let value = this.get("tvl");
+    return value!.toBigInt();
+  }
+
+  set tvl(value: BigInt) {
+    this.set("tvl", Value.fromBigInt(value));
+  }
+
+  get pendingPerfFees(): BigInt {
+    let value = this.get("pendingPerfFees");
+    return value!.toBigInt();
+  }
+
+  set pendingPerfFees(value: BigInt) {
+    this.set("pendingPerfFees", Value.fromBigInt(value));
+  }
+
+  get pendingMngFees(): BigInt {
+    let value = this.get("pendingMngFees");
+    return value!.toBigInt();
+  }
+
+  set pendingMngFees(value: BigInt) {
+    this.set("pendingMngFees", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
 }
 
 export class Deposit extends Entity {

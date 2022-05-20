@@ -26,6 +26,20 @@ type Vault @entity {
 
     managementFeesHarvests: [HarvestManagementFees!]! @derivedFrom(field: "vault")
     performanceFeesHarvests: [HarvestPerformanceFees!]! @derivedFrom(field: "vault")
+
+    snapshots: [VaultSnapshot!]! @derivedFrom(field: "vault")
+}
+
+type VaultSnapshot @entity {
+    id: ID!
+    factory: Factory!
+    vault: Vault!
+    sharePrice: BigInt!
+    positions: [BigInt!]!
+    tvl: BigInt!
+    pendingPerfFees: BigInt!
+    pendingMngFees: BigInt!
+    timestamp: BigInt!
 }
 
 type Deposit @entity {
@@ -52,9 +66,9 @@ type Rebalance @entity {
     id: ID!
     vault: Vault!
     from: Bytes!
-    currentSignals: [BigInt!]!
-    desiredSignals: [BigInt!]!
-    recordedSignals: [BigInt!]!
+    desiredSignals: [BigInt!]! # Desired
+    currentSignals: [BigInt!]! # Observed
+    recordedSignals: [BigInt!]! # Queried in TG
     timestamp: BigInt!
     sharePriceAfter: BigInt!
 }

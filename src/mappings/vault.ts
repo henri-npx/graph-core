@@ -49,6 +49,7 @@ export function handleRebalance(event: RebalanceEvent): void {
   const vaultContract = VaultContract.bind(event.address);
   const vaultStatusAfter = vaultContract.getVaultStatus();
   newRebalance.recordedSignals = vaultStatusAfter.value0;
+  newRebalance.sharePriceAfter = vaultStatusAfter.value2;
 
   // Save
   newRebalance.save()
