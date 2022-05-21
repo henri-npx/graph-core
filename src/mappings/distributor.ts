@@ -45,20 +45,35 @@ export function handleNewDistributionPeriod(event: NewDistributionPeriodEvent): 
 export function handleClaimed(event: ClaimedEvent): void {
     let rewardDistributor = RewardDistributor.load(event.address.toHexString())
     if (rewardDistributor == null) return;
-    let user = UserReward.load(event.params.account.toHexString());
-    if (user == null) {
-        user = new UserReward(event.params.account.toHexString());
-        user.accUserRewards = ZERO_BI
-        user.rewardedAtPeriods = [];
-        user.rewardsPerPeriods = [];
+    const entityName = rewardDistributor.id + "-" + event.params.account.toHexString();
+    let userReward = UserReward.load(entityName);
+    if (userReward == null) {
+        userReward = new UserReward(entityName);
+        userReward.accUserRewards = ZERO_BI
+        userReward.rewardedAtPeriods = [];
+        userReward.rewardsPerPeriods = [];
     };
+    userReward.save();
+    userReward.user = event.params.account;
 
-    const rewardedAtPeriods = event.params.index.toI32(); // - 1; // See Event Solidity
-    const rewardsPerPeriods = event.params.amount;
-    user.rewardedAtPeriods.push(rewardedAtPeriods);
-    user.rewardsPerPeriods.push(rewardsPerPeriods);
-    user.accUserRewards = user.accUserRewards.plus(event.params.amount);
-    user.save();
+    /// Array Complications in TG ...
+    const size = userReward.rewardedAtPeriods.length;
+    /// Array<i32> instead of Array<number> due to : ERROR TS2322: Type '~lib/array/Array<f64>' is not assignable to type '~lib/array/Array<i32>'.
+    const updatedRewardedAtPeriods = new Array<i32>(size + 1);
+    const updatedRewardsPerPeriods = new Array<BigInt>(size + 1);
+    for (let x = 0; x < size; x++) {
+        /// Might cause scaling limits ...
+        updatedRewardedAtPeriods[x] = userReward.rewardedAtPeriods[x];
+        updatedRewardsPerPeriods[x] = userReward.rewardsPerPeriods[x];
+    }
+    updatedRewardedAtPeriods[size] = event.params.index.toI32(); // - 1; // See Event Solidity
+    updatedRewardsPerPeriods[size] = event.params.amount;
+
+    userReward.rewardsPerPeriods = updatedRewardsPerPeriods;
+    userReward.rewardedAtPeriods = updatedRewardedAtPeriods;
+
+    userReward.accUserRewards = userReward.accUserRewards.plus(event.params.amount);
+    userReward.save();
     rewardDistributor.save()
 }
 
