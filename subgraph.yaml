@@ -11,7 +11,7 @@ dataSources:
       name: Factory
       network: bsc
       source:
-          address: "0xFd4a88ff61152008dc2BEf0e3feecB48E455c65a" # BAD ONE ! (Also update helpers constants)
+          address: "0xfd4a88ff61152008dc2bef0e3feecb48e455c65a" # BAD ONE ! (Also update helpers constants)
           abi: Factory
           startBlock: 17977696 # First Vault #  Deployment : 17962855 # To update for new Graphs
       mapping:
@@ -37,7 +37,7 @@ dataSources:
       name: RewardDistributor
       network: bsc
       source:
-          address: "0x5B605F70E0fa3FC13C236316147cB03fB4097Ccb" # BAD ONE ! (Also update helpers constants)
+          address: "0x4a795b4fe77841930044fc5a05fd98de59869133" # BAD ONE ! (Also update helpers constants)
           abi: RewardDistributor
           startBlock: 17977696 # First Vault #  Deployment : 17962855 # To update for new Graphs
       mapping:
@@ -55,12 +55,12 @@ dataSources:
                 handler: handleClaimed
               - event: NewDistributionPeriod(uint256,address,uint256)
                 handler: handleNewDistributionPeriod
-              - event: RewardLeftRecovered(uint256,uint256)
-                handler: handleRewardLeftRecovered
-              - event: Staked(address,uint256,uint256)
-                handler: handleStaked
-              - event: Unstaked(address,uint256,bool)
-                handler: handleUnstaked
+              # - event: RewardLeftRecovered(uint256,uint256)
+              #   handler: handleRewardLeftRecovered
+              # - event: Staked(address,uint256,uint256)
+              #   handler: handleStaked
+              # - event: Unstaked(address,uint256,bool)
+              #   handler: handleUnstaked
 templates:
     - kind: ethereum/contract
       name: Vault

@@ -26,6 +26,7 @@ export function handleNewDistributionPeriod(event: NewDistributionPeriodEvent): 
         rewardDistributor.distributionsCount = 0
         rewardDistributor.accRewards = ZERO_BI
     }
+    rewardDistributor.save()
     // Update
     rewardDistributor.distributionsCount = rewardDistributor.distributionsCount + 1
     rewardDistributor.accRewards = rewardDistributor.accRewards.plus(event.params.amount)
@@ -52,12 +53,13 @@ export function handleClaimed(event: ClaimedEvent): void {
         user.rewardsPerPeriods = [];
     };
 
-    const rewardedAtPeriods = event.params.index.toI32();
+    const rewardedAtPeriods = event.params.index.toI32(); // - 1; // See Event Solidity
     const rewardsPerPeriods = event.params.amount;
     user.rewardedAtPeriods.push(rewardedAtPeriods);
     user.rewardsPerPeriods.push(rewardsPerPeriods);
     user.accUserRewards = user.accUserRewards.plus(event.params.amount);
     user.save();
+    rewardDistributor.save()
 }
 
 // Theses handlers are not required, for now
