@@ -112,7 +112,7 @@ export type RewardDistributor = {
     __typename: "RewardDistributor"
     id: string;
     accRewards: BigNumber
-    distributionsCount: BigNumber
+    distributionsCount: number
     distributions: Array<RewardDistribution>
 }
 
