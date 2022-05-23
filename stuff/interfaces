@@ -1,0 +1,136 @@
+import { BigNumber } from 'ethers';
+
+export type Maybe<T> = T | null
+
+export type Exact<T extends { [key: string]: unknown }> = {
+    [K in keyof T]: T[K]
+}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+    { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+    { [SubKey in K]: Maybe<T[SubKey]> }
+/** All built-in and custom scalars, mapped to their actual values */
+
+export type Factory = {
+    __typename: "Factory"
+    id: string;
+    vaultCount: BigNumber
+    vaults: Array<Vault>
+}
+
+export type Vault = {
+    __typename: "Vault"
+    id: string;
+    factory: Factory
+    vault: string
+    creator: string
+    share: string
+    tokens: Array<string>
+    accManagementFeesToDAO: BigNumber
+    accPerformanceFeesToDAO: BigNumber
+    accManagementFeesToStrategists: BigNumber
+    accPerformanceFeesToStrategists: BigNumber
+    deposits: Array<Deposit>
+    rebalances: Array<Rebalance>
+    redemptions: Array<Redeem>
+    depositsCount: number
+    rebalancesCount: number
+    redemptionsCount: number
+    managementFeesHarvests: Array<HarvestManagementFees>
+    performanceFeesHarvests: Array<HarvestPerformanceFees>
+    snapshots: Array<VaultSnapshot>
+}
+
+export type VaultSnapshot = {
+    __typename: "VaultSnapshot"
+    id: string;
+    factory: Factory
+    vault: Vault
+    sharePrice: BigNumber
+    positions: Array<BigNumber>
+    tvl: BigNumber
+    pendingPerfFees: BigNumber
+    pendingMngFees: BigNumber
+    timestamp: BigNumber
+}
+
+export type Deposit = {
+    __typename: "Deposit"
+    id: string;
+    vault: Vault
+    from: string
+    baseTokenAmountIn: BigNumber
+    sharesMinted: BigNumber
+    timestamp: BigNumber
+    sharePriceAfter: BigNumber
+}
+
+export type Redeem = {
+    __typename: "Redeem"
+    id: string;
+    vault: Vault
+    from: string
+    shareBurned: BigNumber
+    amountReceived: BigNumber
+    timestamp: BigNumber
+    sharePriceAfter: BigNumber
+}
+
+export type Rebalance = {
+    __typename: "Rebalance"
+    id: string;
+    vault: Vault
+    from: string
+    desiredSignals: Array<BigNumber>
+    currentSignals: Array<BigNumber>
+    recordedSignals: Array<BigNumber>
+    timestamp: BigNumber
+    sharePriceAfter: BigNumber
+}
+
+export type HarvestManagementFees = {
+    __typename: "HarvestManagementFees"
+    id: string;
+    vault: Vault
+    from: string
+    amountToDAO: BigNumber
+    amountToStrategist: BigNumber
+    timestamp: BigNumber
+}
+
+export type HarvestPerformanceFees = {
+    __typename: "HarvestPerformanceFees"
+    id: string;
+    vault: Vault
+    from: string
+    amountToDAO: BigNumber
+    amountToStrategist: BigNumber
+    timestamp: BigNumber
+}
+
+export type RewardDistributor = {
+    __typename: "RewardDistributor"
+    id: string;
+    accRewards: BigNumber
+    distributionsCount: BigNumber
+    distributions: Array<RewardDistribution>
+}
+
+export type RewardDistribution = {
+    __typename: "RewardDistribution"
+    id: string;
+    index: number
+    distributor: RewardDistributor
+    totalAmountRewarded: BigNumber
+    tokenRewardedWith: string
+    timestamp: BigNumber
+}
+
+export type UserReward = {
+    __typename: "UserReward"
+    id: string;
+    user: string
+    accUserRewards: BigNumber
+    rewardedAtPeriods: Array<number>
+    rewardsPerPeriods: Array<BigNumber>
+}
