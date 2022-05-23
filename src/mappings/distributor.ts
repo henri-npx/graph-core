@@ -52,9 +52,10 @@ export function handleClaimed(event: ClaimedEvent): void {
         userReward.accUserRewards = ZERO_BI
         userReward.rewardedAtPeriods = [];
         userReward.rewardsPerPeriods = [];
+        userReward.user = event.params.account;
     };
+    /// Important to give default value to every field, else the sync will fail at the first save
     userReward.save();
-    userReward.user = event.params.account;
 
     /// Array Complications in TG ...
     const size = userReward.rewardedAtPeriods.length;
@@ -72,6 +73,7 @@ export function handleClaimed(event: ClaimedEvent): void {
     userReward.rewardsPerPeriods = updatedRewardsPerPeriods;
     userReward.rewardedAtPeriods = updatedRewardedAtPeriods;
 
+    userReward.user = event.params.account;
     userReward.accUserRewards = userReward.accUserRewards.plus(event.params.amount);
     userReward.save();
     rewardDistributor.save()
