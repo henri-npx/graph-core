@@ -304,33 +304,6 @@ export class VaultSnapshot extends Entity {
     this.set("vault", Value.fromString(value));
   }
 
-  get sharePrice(): BigInt {
-    let value = this.get("sharePrice");
-    return value!.toBigInt();
-  }
-
-  set sharePrice(value: BigInt) {
-    this.set("sharePrice", Value.fromBigInt(value));
-  }
-
-  get positions(): Array<BigInt> {
-    let value = this.get("positions");
-    return value!.toBigIntArray();
-  }
-
-  set positions(value: Array<BigInt>) {
-    this.set("positions", Value.fromBigIntArray(value));
-  }
-
-  get tvl(): BigInt {
-    let value = this.get("tvl");
-    return value!.toBigInt();
-  }
-
-  set tvl(value: BigInt) {
-    this.set("tvl", Value.fromBigInt(value));
-  }
-
   get pendingPerfFees(): BigInt {
     let value = this.get("pendingPerfFees");
     return value!.toBigInt();
@@ -356,6 +329,60 @@ export class VaultSnapshot extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get triggeredByEvent(): boolean {
+    let value = this.get("triggeredByEvent");
+    return value!.toBoolean();
+  }
+
+  set triggeredByEvent(value: boolean) {
+    this.set("triggeredByEvent", Value.fromBoolean(value));
+  }
+
+  get positions(): Array<BigInt> {
+    let value = this.get("positions");
+    return value!.toBigIntArray();
+  }
+
+  set positions(value: Array<BigInt>) {
+    this.set("positions", Value.fromBigIntArray(value));
+  }
+
+  get sharePrice(): BigInt {
+    let value = this.get("sharePrice");
+    return value!.toBigInt();
+  }
+
+  set sharePrice(value: BigInt) {
+    this.set("sharePrice", Value.fromBigInt(value));
+  }
+
+  get tvl(): BigInt {
+    let value = this.get("tvl");
+    return value!.toBigInt();
+  }
+
+  set tvl(value: BigInt) {
+    this.set("tvl", Value.fromBigInt(value));
+  }
+
+  get assetsPrices(): Array<BigInt> {
+    let value = this.get("assetsPrices");
+    return value!.toBigIntArray();
+  }
+
+  set assetsPrices(value: Array<BigInt>) {
+    this.set("assetsPrices", Value.fromBigIntArray(value));
+  }
+
+  get assetsBalances(): Array<BigInt> {
+    let value = this.get("assetsBalances");
+    return value!.toBigIntArray();
+  }
+
+  set assetsBalances(value: Array<BigInt>) {
+    this.set("assetsBalances", Value.fromBigIntArray(value));
   }
 }
 
@@ -580,15 +607,6 @@ export class Rebalance extends Entity {
     this.set("from", Value.fromBytes(value));
   }
 
-  get currentSignals(): Array<BigInt> {
-    let value = this.get("currentSignals");
-    return value!.toBigIntArray();
-  }
-
-  set currentSignals(value: Array<BigInt>) {
-    this.set("currentSignals", Value.fromBigIntArray(value));
-  }
-
   get desiredSignals(): Array<BigInt> {
     let value = this.get("desiredSignals");
     return value!.toBigIntArray();
@@ -596,6 +614,15 @@ export class Rebalance extends Entity {
 
   set desiredSignals(value: Array<BigInt>) {
     this.set("desiredSignals", Value.fromBigIntArray(value));
+  }
+
+  get currentSignals(): Array<BigInt> {
+    let value = this.get("currentSignals");
+    return value!.toBigIntArray();
+  }
+
+  set currentSignals(value: Array<BigInt>) {
+    this.set("currentSignals", Value.fromBigIntArray(value));
   }
 
   get recordedSignals(): Array<BigInt> {

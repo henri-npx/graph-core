@@ -92,3 +92,4 @@ templates:
                 handler: handleRebalance
               - event: Redeem(uint256,uint256)
                 handler: handleRedeem
+              # To Add: addAsset
