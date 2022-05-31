@@ -384,6 +384,15 @@ export class VaultSnapshot extends Entity {
   set assetsBalances(value: Array<BigInt>) {
     this.set("assetsBalances", Value.fromBigIntArray(value));
   }
+
+  get tokens(): Array<Bytes> {
+    let value = this.get("tokens");
+    return value!.toBytesArray();
+  }
+
+  set tokens(value: Array<Bytes>) {
+    this.set("tokens", Value.fromBytesArray(value));
+  }
 }
 
 export class Deposit extends Entity {
@@ -954,6 +963,15 @@ export class RewardDistribution extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get rewardRecovered(): BigInt {
+    let value = this.get("rewardRecovered");
+    return value!.toBigInt();
+  }
+
+  set rewardRecovered(value: BigInt) {
+    this.set("rewardRecovered", Value.fromBigInt(value));
   }
 }
 

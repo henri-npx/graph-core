@@ -16,8 +16,9 @@ import {
 	Redeem as RedeemEvent,
 	HarvestManagementFees as HarvestManagementFeesEvent,
 	HarvestPerformanceFees as HarvestPerformanceFeesEvent,
+	AddAsset as AddAssetEvent,
 } from "../types/Factory/Vault";
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { FACTORY_ADDRESS } from "./helpers";
 
 export function handleDeposit(event: DepositEvent): void {
@@ -135,4 +136,29 @@ export function handleHarvestPerformanceFees(event: HarvestPerformanceFeesEvent)
 	newPerformanceFeesHarvest.save();
 	vault.save();
 	buildVaultSnapshot(factory, Address.fromString(vault.id), event.block, true);
+}
+
+
+
+/**
+ * No entity are created here, only the vault is modified
+ * @param event Add Asset Event from Vault
+ * @returns 
+ */
+export function handleAddAsset(event: AddAssetEvent): void {
+	const factory = Factory.load(FACTORY_ADDRESS);
+	if (factory === null) return;
+	const entity = Vault.load(event.address.toHexString());
+	if (entity == null) return;
+	const storage = VaultContract.bind(Address.fromString(event.address.toHexString()));
+	const tokensLength = storage.tokensLength().toI32();
+	// At this point, the new token is added so length is true
+	const newTokens = new Array<Bytes>(tokensLength); // https://medium.com/protofire-blog/subgraph-development-part-2-handling-arrays-and-identifying-entities-30d63d4b1dc6
+	for (let x = 0; x < tokensLength; x++) {
+		const token = storage.tokens(BigInt.fromI32(x));
+		newTokens[x] = token.value0; // Token Address
+	}
+	entity.tokens = newTokens;
+	entity.save();
+	buildVaultSnapshot(factory, Address.fromString(entity.id), event.block, true);
 }

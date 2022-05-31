@@ -57,13 +57,16 @@ export function buildVaultSnapshot(
   const entityName = FACTORY_ADDRESS + "-" + vaultAddress.toHexString() + "-" + block.number.toString();
   const status = vault.getVaultStatus();
 
-  /// assetsPrices and assetsBalances
+  /// assetsPrices + assets addresses + assetsBalances
   const tokensLength = vault.tokensLength().toI32();
   const assetsPrices = new Array<BigInt>(tokensLength);
+  const newTokens = new Array<Bytes>(tokensLength); // https://medium.com/protofire-blog/subgraph-development-part-2-handling-arrays-and-identifying-entities-30d63d4b1dc6
+
   for (let y = 0; y < tokensLength; y++) {
     const asset = vault.tokens(BigInt.fromI32(y));
     const price = vault.getLatestPrice(asset.value1); // value 0 = address of price feed
     assetsPrices[y] = price;
+    newTokens[y] = asset.value0; // Token Address
   }
 
   const assetsBalances = vault.getVaultBalances();
@@ -74,6 +77,7 @@ export function buildVaultSnapshot(
 
   snapshot.assetsBalances = assetsBalances;
   snapshot.assetsPrices = assetsPrices;
+  snapshot.tokens = newTokens;
 
   snapshot.positions = status.value0;
   snapshot.tvl = status.value1;

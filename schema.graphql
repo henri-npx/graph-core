@@ -47,6 +47,7 @@ type VaultSnapshot @entity {
 
 	assetsPrices: [BigInt!]! # USD-Priced
 	assetsBalances: [BigInt!]!
+	tokens: [Bytes!]! # address[]
 }
 
 type Deposit @entity {
@@ -114,6 +115,7 @@ type RewardDistribution @entity {
 	totalAmountRewarded: BigInt!
 	tokenRewardedWith: Bytes!
 	timestamp: BigInt!
+	rewardRecovered: BigInt!
 }
 
 type UserReward @entity {

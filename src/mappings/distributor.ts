@@ -31,6 +31,7 @@ export function handleNewDistributionPeriod(event: NewDistributionPeriodEvent): 
 	newDistribution.totalAmountRewarded = event.params.amount;
 	newDistribution.tokenRewardedWith = event.params.token;
 	newDistribution.timestamp = event.block.timestamp;
+	newDistribution.rewardRecovered = ZERO_BI;
 	// Save
 	newDistribution.save();
 	rewardDistributor.save();
@@ -73,7 +74,24 @@ export function handleClaimed(event: ClaimedEvent): void {
 	rewardDistributor.save();
 }
 
+export function handleRewardLeftRecovered(event: RewardLeftRecoveredEvent): void {
+	let rewardDistributor = RewardDistributor.load(event.address.toHexString());
+	if (rewardDistributor == null) return;
+	const index = event.params.index.toI32()
+	const distributionsCount = rewardDistributor.distributionsCount;
+	for (let x = 0; x < distributionsCount; x++) {
+		const distribution = RewardDistribution.load(rewardDistributor.distributions[x]);
+		if (distribution == null) return;
+		if (index == distribution.index) {
+			// Reward Recovered at the end of the epoch, aka. not claimed rewards
+			distribution.rewardRecovered = event.params.amount;
+			distribution.save()
+			break;
+		}
+	}
+}
+
 // Theses handlers are not required, for now
-// export function handleRewardLeftRecovered(event: RewardLeftRecoveredEvent): void {}
 // export function handleStaked(event: StakedEvent): void {}
 // export function handleUnstaked(event: UnstakedEvent): void {}
+
