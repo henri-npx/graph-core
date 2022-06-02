@@ -55,8 +55,8 @@ dataSources:
                 handler: handleClaimed
               - event: NewDistributionPeriod(uint256,address,uint256)
                 handler: handleNewDistributionPeriod
-              - event: RewardLeftRecovered(uint256,uint256)
-                handler: handleRewardLeftRecovered
+              # - event: RewardLeftRecovered(uint256,uint256)
+              #   handler: handleRewardLeftRecovered
               # - event: Staked(address,uint256,uint256)
               #   handler: handleStaked
               # - event: Unstaked(address,uint256,bool)

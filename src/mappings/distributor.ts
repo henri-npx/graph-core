@@ -75,18 +75,17 @@ export function handleClaimed(event: ClaimedEvent): void {
 }
 
 export function handleRewardLeftRecovered(event: RewardLeftRecoveredEvent): void {
-	let rewardDistributor = RewardDistributor.load(event.address.toHexString());
+	let rewardDistributor = RewardDistributor.load(REWARD_DISTRIBUTOR_ADDRESS);
 	if (rewardDistributor == null) return;
 	const index = event.params.index.toI32()
 	const distributionsCount = rewardDistributor.distributionsCount;
 	for (let x = 0; x < distributionsCount; x++) {
 		const distribution = RewardDistribution.load(rewardDistributor.distributions[x]);
 		if (distribution == null) return;
-		if (index == distribution.index) {
+		if (index == (distribution.index - 1)) {
 			// Reward Recovered at the end of the epoch, aka. not claimed rewards
 			distribution.rewardRecovered = event.params.amount;
-			distribution.save()
-			break;
+			distribution.save();
 		}
 	}
 }
@@ -94,4 +93,3 @@ export function handleRewardLeftRecovered(event: RewardLeftRecoveredEvent): void
 // Theses handlers are not required, for now
 // export function handleStaked(event: StakedEvent): void {}
 // export function handleUnstaked(event: UnstakedEvent): void {}
-
